@@ -91,27 +91,23 @@ unittest(test_set_get_param)
   assertEqualFloat(6.89, gen.getYShift(), 0.0001);
 }
 
-unittest(test_line)
+unittest(test_line_zero)
 {
   funcgen gen;
   fprintf(stderr, "VERSION: %s\n", FUNCTIONGENERATOR_LIB_VERSION);
   
-  fprintf(stderr, "set get parameters\n");
+  fprintf(stderr, "default line = 1.0 \n");
+
+  assertEqualFloat(1.00, gen.line(), 0.0001);
+
+  fprintf(stderr, "line = amplitude + yshift\n");
 
   gen.setAmplitude(2.34);
   gen.setYShift(6.89);
   assertEqualFloat(9.23, gen.line(), 0.0001);
-}
 
-unittest(test_zero)
-{
-  funcgen gen;
-  fprintf(stderr, "VERSION: %s\n", FUNCTIONGENERATOR_LIB_VERSION);
-  
-  fprintf(stderr, "set get parameters\n");
+  fprintf(stderr, "zero == 0 \n");
 
-  gen.setAmplitude(2.34);
-  gen.setYShift(6.89);
   assertEqual(0, gen.zero());
 }
 
