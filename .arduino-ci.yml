@@ -6,4 +6,4 @@ compile:
     - due
     - zero
   libraries:
-    "MCP4725"
+    - "MCP4725"
