@@ -18,8 +18,7 @@ It is typical used to control one or more DAC's.
 To maximize signal quality one has to apply all (or most) processor power 
 to calculate new values over and over again to get enough resolution. 
 In practice the generator is useful for (very) low frequencies, 
-think 0.01 - 25 Hz, depending on waveform and processor. 
-This range need to be verified.
+think 0.01 - 25 Hz, depending on waveform and processor (see indication below).
 
 Note: this class generates float values, performance wise this can be optimized,
 to achieve higher speeds at cost of accuracy / precision.
@@ -28,7 +27,8 @@ to achieve higher speeds at cost of accuracy / precision.
 ## Performance
 
 Indication of what can be done, note that the values need to be transported 
-to a DAC or serial port too. Numbers based on performance example.
+to a DAC or serial port too. Numbers based on performance example, for one 
+single signal.
 
 | Processor    | Clock    | Waveform | usec/calls | max freq |
 |:-------------|---------:|:---------|-----------:|---------:|
@@ -48,8 +48,8 @@ to a DAC or serial port too. Numbers based on performance example.
 
 - assumption minimal 250 samples per period to get a bit smooth signal.
 - ESP32 can do more calculations but 1000 Hz seems to be a nice upper limit
-   for a software based function generator.
-
+  for a software based function generator.
+- if one wants to control multiple DAC's one need to divide the numbers. 
 
 
 Note: hardware function generator https://github.com/RobTillaart/AD985X
