@@ -17,8 +17,9 @@ This library presents a class for a function generator in software.
 It is typical used to control one or more DAC's.
 To maximize signal quality one has to apply all (or most) processor power 
 to calculate new values over and over again to get enough resolution. 
-In practice the generator is useful for (very) low frequencies, 
-think 0.01 - 25 Hz, depending on waveform and processor (see indication below).
+In practice the generator is useful for low frequencies, 
+0.01 - 25 Hz, depending on waveform and processor and number of DAC's.
+(see indication below).
 
 Note: this class generates float values, performance wise this can be optimized,
 to achieve higher speeds at cost of accuracy / precision.
@@ -46,10 +47,11 @@ single signal.
 | ESP32        | 240 MHz  | random   |  1.3       |  1000 Hz |
 
 
-- assumption minimal 250 samples per period to get a bit smooth signal.
-- ESP32 can do more calculations but 1000 Hz seems to be a nice upper limit
-  for a software based function generator.
-- if one wants to control multiple DAC's one need to divide the numbers. 
+- assumption minimal 250 samples per period to get a smooth signal.
+  if a rougher signal is OK, higher frequencies are possible.
+- ESP32 can do more calculations however 1000 Hz seems to be a nice 
+  upper limit for a software based function generator.
+- if one wants to control multiple DAC's one need to divide the numbers.
 
 
 Note: hardware function generator https://github.com/RobTillaart/AD985X
