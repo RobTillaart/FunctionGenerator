@@ -13,6 +13,7 @@
 
 funcgen gen;
 
+
 void setup()
 {
   Serial.begin(115200);
@@ -21,6 +22,7 @@ void setup()
   
   gen.setAmplitude(50);
 }
+
 
 void loop()
 {
@@ -43,4 +45,6 @@ void loop()
   Serial.println();
 }
 
-// END OF FILE
+
+// -- END OF FILE --
+

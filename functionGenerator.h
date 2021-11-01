@@ -7,9 +7,11 @@
 //     URL: https://github.com/RobTillaart/FunctionGenerator
 //
 
+
 #include "Arduino.h"
 
-#define FUNCTIONGENERATOR_LIB_VERSION "0.2.1"
+#define FUNCTIONGENERATOR_LIB_VERSION           (F("0.2.1"))
+
 
 class funcgen
 {
@@ -21,6 +23,7 @@ public:
   float getPeriod() { return _period; };
   void  setFrequency(float freq = 1.0) { setPeriod(1/freq); };
   float getFrequency() { return _freq1; };
+
   void  setAmplitude(float ampl = 1.0) { _amplitude = ampl; };
   float getAmplitude() { return _amplitude; };
   void  setPhase(float phase = 0.0) { _phase = phase; };
@@ -56,4 +59,6 @@ private:
   uint32_t _random();
 };
 
-// END OF FILE
+
+// -- END OF FILE --
+

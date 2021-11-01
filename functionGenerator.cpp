@@ -15,7 +15,9 @@
 //  0.2.0   2020-06-10  main refactoring and cleanup
 //  0.2.1   2020-12-24  Arduino-CI + unit tests
 
+
 #include "functionGenerator.h"
+
 
 funcgen::funcgen(float period, float amplitude, float phase, float yShift)
 {
@@ -24,6 +26,7 @@ funcgen::funcgen(float period, float amplitude, float phase, float yShift)
   setPhase(phase);
   setYShift(yShift);
 }
+
 
 void funcgen::setPeriod(float period)
 {
@@ -34,15 +37,18 @@ void funcgen::setPeriod(float period)
   _freq0 = TWO_PI * _freq1;
 }
 
+
 float funcgen::line()
 {
   return _yShift + _amplitude;
 }
 
+
 float funcgen::zero()
 {
   return 0;
 }
+
 
 float funcgen::sawtooth(float t)
 {
@@ -62,6 +68,7 @@ float funcgen::sawtooth(float t)
   rv += _yShift;
   return rv;
 }
+
 
 float funcgen::triangle(float t)
 {
@@ -84,6 +91,7 @@ float funcgen::triangle(float t)
   return rv;
 }
 
+
 float funcgen::square(float t)
 {
   float rv;
@@ -105,6 +113,7 @@ float funcgen::square(float t)
   return rv;
 }
 
+
 float funcgen::sinus(float t)
 {
   float rv;
@@ -113,6 +122,7 @@ float funcgen::sinus(float t)
   rv += _yShift;
   return rv;
 }
+
 
 float funcgen::stair(float t, uint16_t steps)
 {
@@ -129,12 +139,14 @@ float funcgen::stair(float t, uint16_t steps)
   return _yShift + _amplitude * (1.0 - 2.0 * level / (steps - 1));
 }
 
+
 float funcgen::random()
 {
   // TODO smart reseed needed
   float rv = _yShift + _amplitude * _random() * 0.2328306436E-9;  // div 0xFFFFFFFF
   return rv;
 }
+
 
 // An example of a simple pseudo-random number generator is the
 // Multiply-with-carry method invented by George Marsaglia.
@@ -154,10 +166,12 @@ uint32_t funcgen::_random()
 // t = 0..9999 period 10000 in millis, returns 0..255
 
 /*
+
 uint8_t ifgsaw(uint16_t t, uint16_t period = 1000)
 {
  return 255L * t / period;
 }
+
 
 uint8_t ifgtri(uint16_t t, uint16_t period = 1000)
 {
@@ -165,23 +179,28 @@ uint8_t ifgtri(uint16_t t, uint16_t period = 1000)
  return 255L - 510L * t / period;
 }
 
+
 uint8_t ifgsqr(uint16_t t, uint16_t period = 1000)
 {
  if (t * 2 < period) return 510L * t / period;
  return 255L - 510L * t / period;
 }
 
+
 uint8_t ifgsin(uint16_t t, uint16_t period = 1000)
 {
  return sin(355L * t / period / 113); // LUT
 }
+
 
 uint8_t ifgstr(uint16_t t, uint16_t period = 1000, uint16_t steps = 8)
 {
  int level = 1L * steps * t / period;
  return 255L * level / (steps - 1);
 }
+
 */
+
 
 //
 // SIMPLE float ONES
@@ -189,11 +208,13 @@ uint8_t ifgstr(uint16_t t, uint16_t period = 1000, uint16_t steps = 8)
 // t = 0..period
 // period = 0.001 ... 10000 ?
 /*
+
 float fgsaw(float t, float period = 1.0)
 {
  if (t >= 0) return -1.0 + 2 * t / period;
  return 1.0 + 2 * t / period;
 }
+
 
 float fgtri(float t, float period = 1.0)
 {
@@ -201,6 +222,7 @@ float fgtri(float t, float period = 1.0)
  if (t * 2 < period) return -1.0 + 4 * t / period;
  return 3.0 - 4 * t / period;
 }
+
 
 float fgsqr(float t, float period = 1.0)
 {
@@ -214,10 +236,12 @@ float fgsqr(float t, float period = 1.0)
  return 1.0;
 }
 
+
 float fgsin(float t, float period = 1.0)
 {
  return sin(TWO_PI * t / period);
 }
+
 
 float fgstr(float t, float period = 1.0, uint16_t steps = 8)
 {
@@ -230,7 +254,9 @@ float fgstr(float t, float period = 1.0, uint16_t steps = 8)
  int level = steps * t / period;
  return 1.0 - 2.0 * level / (steps - 1);
 }
+
 */
+
 
 //
 // FULL floatS ONES
@@ -248,6 +274,7 @@ float fgsaw(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.
   return yShift + amplitude * ( 1.0 - 2 * t / period);
 }
 
+
 float fgtri(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0, float dutyCycle = 0.50)
 {
   t += phase;
@@ -260,6 +287,7 @@ float fgtri(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.
   // return yShift + amplitude * (-1.0 + 2 / (1 - dutyCycle) - 2 * t / ((1 - dutyCycle) * period));
   return yShift + amplitude * (-1.0 + 2 / (1 - dutyCycle) * ( 1 - t / period));
 }
+
 
 float fgsqr(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0, float dutyCycle = 0.50)
 {
@@ -276,12 +304,14 @@ float fgsqr(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.
   return yShift + amplitude;
 }
 
+
 float fgsin(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0)
 {
   t += phase;
   float rv = yShift + amplitude * sin(TWO_PI * t / period);
   return rv;
 }
+
 
 float fgstr(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0, uint16_t steps = 8)
 {
@@ -298,4 +328,6 @@ float fgstr(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.
   return yShift + amplitude * (1.0 - 2.0 * level / (steps - 1));
 }
 
-// END OF FILE
+
+// -- END OF FILE --
+
