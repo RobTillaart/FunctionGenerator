@@ -19,14 +19,17 @@ void setup()
   Serial.begin(115200);
   // Serial.print("Start functionGeneratorPerformance - LIB VERSION: ");
   // Serial.println(FUNCTIONGENERATOR_LIB_VERSION);
-  
+
   gen.setAmplitude(50);
+  gen.setFrequency(1);
 }
 
 
 void loop()
 {
   float t = millis() * 0.001;
+  Serial.print(t, 3);
+  Serial.print("\t");
   Serial.print(gen.square(t));
   Serial.print("\t");
   Serial.print(gen.sawtooth(t));
@@ -35,7 +38,7 @@ void loop()
   Serial.print("\t");
   Serial.print(gen.sinus(t));
   Serial.print("\t");
-  Serial.print(gen.stair(t));
+  Serial.print(gen.stair(t), 16);
   Serial.print("\t");
   Serial.print(gen.random());
   Serial.print("\t");
