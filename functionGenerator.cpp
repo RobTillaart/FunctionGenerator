@@ -1,7 +1,7 @@
 //
 //    FILE: functionGenerator.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.2.1
+// VERSION: 0.2.2
 // PURPOSE: wave form generating functions (use with care)
 //     URL: https://github.com/RobTillaart/FunctionGenerator
 //
@@ -14,6 +14,9 @@
 //  0.1.5   2017-07-29  Fix issue #33 (dbl -> float)
 //  0.2.0   2020-06-10  main refactoring and cleanup
 //  0.2.1   2020-12-24  Arduino-CI + unit tests
+//  0.2.2   2021-11-02  update Arduino-CI, badges
+//                      add mode for sawtooth and stair.
+//
 
 
 #include "functionGenerator.h"
@@ -50,20 +53,22 @@ float funcgen::zero()
 }
 
 
-float funcgen::sawtooth(float t)
+float funcgen::sawtooth(float t, uint8_t mode)
 {
   float rv;
   t += _phase;
   if (t >= 0.0)
   {
     if (t >= _period) t = fmod(t, _period);
+    if (mode == 1) t = _period - t;
     rv = _amplitude * (-1.0 + t *_freq2);
   }
   else
   {
     t = -t;
     if (t >= _period) t = fmod(t, _period);
-   rv = _amplitude * ( 1.0 - t * _freq2);
+    if (mode == 1) t = _period - t;
+    rv = _amplitude * ( 1.0 - t * _freq2);
   }
   rv += _yShift;
   return rv;
@@ -124,17 +129,19 @@ float funcgen::sinus(float t)
 }
 
 
-float funcgen::stair(float t, uint16_t steps)
+float funcgen::stair(float t, uint16_t steps, uint8_t mode)
 {
   t += _phase;
   if (t >= 0)
   {
     if (t >= _period) t = fmod(t, _period);
+    if (mode == 1) t = _period - t;
     int level = steps * t / _period;
     return _yShift + _amplitude * (-1.0 + 2.0 * level / (steps - 1));
   }
   t = -t;
   if (t >= _period) t = fmod(t, _period);
+  if (mode == 1) t = _period - t;
   int level = steps * t / _period;
   return _yShift + _amplitude * (1.0 - 2.0 * level / (steps - 1));
 }

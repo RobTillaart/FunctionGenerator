@@ -27,9 +27,9 @@ to achieve higher speeds at cost of accuracy / precision.
 
 ## Performance
 
-Indication of what can be done, note that the values need to be transported 
-to a DAC or serial port too. Numbers based on performance example, for one 
-single signal.
+Indication of what performance can be expected (based upon 0.2.1 version).  
+Note that the values need to be transported to a DAC or serial port too.  
+Numbers based on performance example, for one single signal.
 
 | Processor    | Clock    | Waveform | usec/calls | max freq |
 |:-------------|---------:|:---------|-----------:|---------:|
@@ -39,6 +39,7 @@ single signal.
 | Arduino UNO  | 16 MHz   | sinus    |  164       |  25 Hz   |
 | Arduino UNO  | 16 MHz   | stair    |  81        |  50 Hz   |
 | Arduino UNO  | 16 MHz   | random   |  37        |  1000 Hz |
+|              |          |          |            |          |
 | ESP32        | 240 MHz  | sawtooth |  3.8       |  1000 Hz |
 | ESP32        | 240 MHz  | triangle |  3.9       |  1000 Hz |
 | ESP32        | 240 MHz  | square   |  2.8       |  1000 Hz |
@@ -85,11 +86,11 @@ compared with other waves.
 
 t is time in seconds
 
-- **float sawtooth(float t)** slowly rising, steep decay.
+- **float sawtooth(float t, uint8_t mode = 0)** mode == 0 (default) ==>  sawtooth /|. mode == 1 ==> sawtooth |\.
 - **float triangle(float t)** triangle form, duty cycle 50%.
 - **float square(float t)** square wave with duty cycle 50%.
-- **float sinus(float t)** sinus wave, has no duty cycle parameter. 
-- **float stair(float t, uint16_t steps = 8)** steps up signal
+- **float sinus(float t)** sinus wave, has no duty cycle. 
+- **float stair(float t, uint16_t steps = 8, uint8_t mode = 0)** mode = 0 ==> steps up, mode = 1 steps down.
 - **float random()** noise generation.
 - **float line()** constant voltage line
 - **float zero()** constant zero.
@@ -105,24 +106,35 @@ See examples.
 
 ## Future
 
-- test a lot more...
-- test performance and workable range.
-- sawtooth-reverse(), stair-reverse()
-- adjust duty-cycle.
-- investigate duty-cycle eg for sinus.
-- investigate white noise, pink noise etc.
-- investigate performance gains.
-- stand-alone functions in separate .h??
+
+#### waveforms
+
+- square duty-cycle  (will be slower!)
+- triangle duty-cycle (makes sawtooth a special triangle)
+- trapezium wave (would merge square and triangle and sawtooth)
+
+#### investigate
+
+- duty-cycle for sinus what does it mean. move peak.
+- white noise, pink noise etc.
+- investigate algorithms for performance gains (DAC specific values 10-12-16 bit)
+- Amplitude modulation ?
+- external clock to synchronize two or more sw function generators.
+- RC function curve.
+- heartbeat curve?
+- record a signal and play back
+
+#### misc
+
+- stand-alone functions in separate .h?
 - mapping to voltage function.
-- ESP32 version as separate task...
 - check for synergy with https://github.com/RobTillaart/AD985X
+
+#### examples
+
+- example ESP32 version as separate task...
 - example with DAC. 8 12 16 bit.
 - example with potentiometers for 4 parameters
-- RC function.
-- Trapezium wave.
-- record
-- play "recording"
-- external clock to synchronize two or more function generators.
-- fix this list of ideas into something like a plan :)
+
 
 

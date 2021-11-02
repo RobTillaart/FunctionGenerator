@@ -2,7 +2,7 @@
 //
 //    FILE: functionGenerator.h
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.2.1
+// VERSION: 0.2.2
 // PURPOSE: wave form generating functions (use with care)
 //     URL: https://github.com/RobTillaart/FunctionGenerator
 //
@@ -10,7 +10,7 @@
 
 #include "Arduino.h"
 
-#define FUNCTIONGENERATOR_LIB_VERSION           (F("0.2.1"))
+#define FUNCTIONGENERATOR_LIB_VERSION           (F("0.2.2"))
 
 
 class funcgen
@@ -37,11 +37,11 @@ public:
   float zero();
   
   // standard wave forms
-  float sawtooth(float t);
+  float sawtooth(float t, uint8_t mode = 0);
   float triangle(float t);
   float square(float t);
   float sinus(float t);
-  float stair(float t, uint16_t steps = 8);
+  float stair(float t, uint16_t steps = 8, uint8_t mode = 0);
   float random();
 
 private:
