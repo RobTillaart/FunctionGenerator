@@ -20,6 +20,8 @@ float value   = 0;
 float frequency = 40;
 float amplitude  = 1.0;
 
+float d = 0;
+
 //  q = square
 //  s = sinus
 //  w = sawtooth
@@ -90,6 +92,17 @@ void setup()
           break;
         case 'a':
           break;
+        case 'D':
+          d = gen.getDutyCycle();
+          d++;
+          gen.setDutyCycle(d);
+          break;
+        case 'd':
+          d = gen.getDutyCycle();
+          d--;
+          gen.setDutyCycle(d);
+          break;
+          break;
         case 'q':
         case 's':
         case 'w':
@@ -134,4 +147,3 @@ void loop()
 
 
 //  -- END OF FILE --
-

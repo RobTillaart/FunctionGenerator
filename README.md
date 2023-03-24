@@ -106,7 +106,7 @@ compared with other waves.
 - **float getYShift()** returns the set Y-shift.
 - **void  setDutyCycle(float percentage = 100)** sets the duty cycle of the signal.
 Experimental, not all waveforms have a duty cycle.
-Duty cycle must be between 0 and 100%.
+Duty cycle must be between 0 and 100% will be clipped otherwise.
 - **float getDutyCycle()** returns the set duty cycle.
 - **void  setRandomSeed(uint32_t a, uint32_t b = 314159265)** initial seeds for the
 (Marsaglia) random number generator. 
