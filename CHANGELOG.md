@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [0.2.5] - 2023-02-12
+## [0.2.5] - 2023-03-25
+- add **setDutyCycle()**
+- add **getDutyCycle()**
 - add **seedRandom(a, b)**
 - move code from .h to .cpp
 - update readme.md
