@@ -32,7 +32,7 @@ Note that the values need to be transported to a DAC or serial port too.
 Numbers based on performance example, for one single signal.
 
 
-|  Processor    |  Clock    |  Waveform  |  usec/call  |  max freq  | max val/period |
+|  Processor    |  Clock    |  Waveform  |  usec/call  |  max freq  | max values/period |
 |:--------------|----------:|:-----------|------------:|-----------:|--------:|
 |  Arduino UNO  |  16 MHz   |  sawtooth  |   62        |    60 Hz   |   268   |
 |  Arduino UNO  |  16 MHz   |  triangle  |   74        |    50 Hz   |   270   |
@@ -51,10 +51,10 @@ Numbers based on performance example, for one single signal.
 
 - Assumption minimal around 250 samples per period to get a smooth signal.
   If a rougher signal is OK, higher frequencies are possible.
-  For square and random  less samples per period are often acceptable.
+  For **square()** and **random()** less samples per period are often acceptable.
 - ESP32 can do more calculations however 1000 Hz seems to be a nice 
   upper limit for a software based function generator.
-- if one wants to control multiple DAC's one need to divide the numbers
+- If one wants to control multiple DAC's one need to divide the numbers
   and round down.
 
 
@@ -87,7 +87,8 @@ Needs further investigations.
 #### Constructor
 
 - **funcgen(float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0)**
-All parameters can be set in the constructor but also later in configuration.
+All parameters (except duty cycle) can be set in the constructor but also later in configuration.
+Default dutyCycle is 50%.
 
 
 #### Configuration
