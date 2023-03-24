@@ -62,13 +62,17 @@ Note: hardware function generator https://github.com/RobTillaart/AD985X
 
 ## Interface
 
-### Constructor
+```cpp
+#include "functionGenerator.h"
+```
+
+#### Constructor
 
 - **funcgen(float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0)**
 All parameters can be set in the constructor but also later in configuration.
 
 
-### Configuration
+#### Configuration
 
 - **void  setPeriod(float period = 1.0)** set the period of the wave in seconds. 
 - **float getPeriod()** returns the set period.
@@ -82,9 +86,15 @@ compared with other waves.
 - **float getPhase()** returns the set phase.
 - **void  setYShift(float yShift = 0.0)** sets an Y-shift in amplitude, allows to set some zero point.
 - **float getYShift()** returns the set Y-shift.
+- **void  setDutyCycle(float percentage = 100)** sets the duty cycle of the signal.
+Experimental, not all waveforms have a duty cycle.
+Duty cycle must be between 0 and 100%.
+- **float getDutyCycle()** returns the set duty cycle.
+- **void  setRandomSeed(uint32_t a, uint32_t b = 314159265)** initial seed for the
+(Marsaglia) random number generator. 
 
 
-### Wave forms
+#### Wave forms
 
 The variable t == time in seconds.
 
@@ -101,9 +111,15 @@ Line() and zero() are functions that can be used to drive a constant voltage fro
 and can be used to calibrate the generator / DAC combination.
 
 
-## Operational
+#### Experimental
 
-See examples.
+Since 0.2.5 experimental support for duty cycle has been added.
+
+In first iteration only **square** and **triangle** support duty cycle.
+The other functions need to be investigated what duty cycle means, and
+if it is (easy) implementable.
+
+Feedback is welcome.
 
 
 ## Future
@@ -113,9 +129,34 @@ See examples.
 
 - documentation
   - quality of signals, max freq etc
-  
+
 
 #### Should
+
+- smart reseed needed for random()
+- initialize random generator with compile time
+
+
+#### Could
+
+- trapezium wave (would merge square and triangle and sawtooth)
+- white noise, pink noise etc.
+- investigate algorithms for performance gains (DAC specific values 10-12-16 bit)
+- external clock to synchronize two or more software function generators.
+- RC function curve.
+- stand-alone functions in separate .h
+- check for synergy with https://github.com/RobTillaart/AD985X
+
+
+#### Examples
+
+  - Amplitude modulation ?
+  - heartbeat curve?
+  - example ESP32 version as separate task.
+  - example with DAC. 8 12 16 bit.
+  - example with potentiometers for 4 parameters
+
+#### Wont
 
 - investigate duty cycle for waveforms
   - Derived class for the duty cycle variants? or functions!
@@ -125,32 +166,5 @@ See examples.
   - **float sinusDC()** duty-cycle for sinus what does it mean. 
     - ==> move peaks, two half sinus with diff frequency
   - **float stairDC()**
-- add **seedRandom(a, b)**
-- move code from .h to .cpp
-
-
-#### Could
-
-- trapezium wave (would merge square and triangle and sawtooth)
-- Bezier curve?
-- white noise, pink noise etc.
-- investigate algorithms for performance gains (DAC specific values 10-12-16 bit)
-- Amplitude modulation ?
-- external clock to synchronize two or more software function generators.
-- RC function curve.
-- heartbeat curve?
-- record a signal and play back  (separate class?)
-- seed value random generator?
-- stand-alone functions in separate .h?
-- check for synergy with https://github.com/RobTillaart/AD985X
-
-#### examples
-
-- example ESP32 version as separate task.
-- example with DAC. 8 12 16 bit.
-- example with potentiometers for 4 parameters
-
-#### Wont
-
-
-
+- Bezier curve? (too complex)
+- record a signal and play back  ==> separate class

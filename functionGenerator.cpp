@@ -4,8 +4,6 @@
 // VERSION: 0.2.5
 // PURPOSE: wave form generating functions (use with care)
 //     URL: https://github.com/RobTillaart/FunctionGenerator
-//
-// HISTORY: see changelog.md
 
 
 #include "functionGenerator.h"
@@ -17,9 +15,14 @@ funcgen::funcgen(float period, float amplitude, float phase, float yShift)
   setAmplitude(amplitude);
   setPhase(phase);
   setYShift(yShift);
+  setDutyCycle(50);  //  TODO param?
 }
 
 
+/////////////////////////////////////////////////////////////
+//
+//  CONFIGURATION
+//
 void funcgen::setPeriod(float period)
 {
   _period = period;
@@ -30,6 +33,85 @@ void funcgen::setPeriod(float period)
 }
 
 
+float funcgen::getPeriod()
+{
+  return _period;
+}
+
+
+void funcgen::setFrequency(float freq)
+{
+  setPeriod(1.0 / freq);
+}
+
+
+float funcgen::getFrequency()
+{
+  return _freq1;
+}
+
+
+void funcgen::setAmplitude(float ampl)
+{
+  _amplitude = ampl;
+}
+
+
+float funcgen::getAmplitude()
+{
+  return _amplitude;
+}
+
+void funcgen::setPhase(float phase)
+{
+  _phase = phase;
+}
+
+
+float funcgen::getPhase()
+{
+  return _phase;
+}
+
+
+void funcgen::setYShift(float yShift)
+{
+  _yShift = yShift;
+}
+
+
+float funcgen::getYShift()
+{
+  return _yShift;
+}
+
+
+void funcgen::setDutyCycle(float dutyCycle)
+{
+  // negative dutyCycle? => 1-dc? or abs()?
+  if (dutyCycle < 0)        _dutyCycle = 0.0;
+  else if (dutyCycle > 100) _dutyCycle = 1.0;
+  else                      _dutyCycle = dutyCycle * 0.01;
+}
+
+
+float funcgen::getDutyCycle()
+{
+  return _dutyCycle * 100.0;
+}
+
+
+void funcgen::setRandomSeed(uint32_t a, uint32_t b)
+{
+  _m_w = a;
+  _m_z = b;
+}
+
+
+/////////////////////////////////////////////////////////////
+//
+//  FUNCTIONS
+//
 float funcgen::line()
 {
   return _yShift + _amplitude;
@@ -73,14 +155,16 @@ float funcgen::triangle(float t)
     t = -t;
   }
   if (t >= _period) t = fmod(t, _period);
-  if ( t * 2 < _period)
+  if (t < (_period * _dutyCycle))
   {
-    rv = _amplitude * (-1.0 + t * _freq4);
+    rv = _amplitude * (-1.0 + t * _freq2 / _dutyCycle);
   }
   else
   {
-    rv = _amplitude * (3.0 - t * _freq4);
-  }
+    //  mirror math
+    t = _period - t;
+    rv = _amplitude * (-1.0 + t * _freq2 /(1 - _dutyCycle));
+  }  
   rv += _yShift;
   return rv;
 }
@@ -93,14 +177,14 @@ float funcgen::square(float t)
   if (t >= 0)
   {
     if (t >= _period) t = fmod(t, _period);
-    if ((t + t) < _period) rv = _amplitude;
+    if (t < (_period * _dutyCycle)) rv = _amplitude;
     else rv = -_amplitude;
   }
   else
   {
     t = -t;
     if (t >= _period) t = fmod(t, _period);
-    if ( t * 2 < _period) rv = -_amplitude;
+    if (t < (_period * _dutyCycle)) rv = -_amplitude;
     else rv = _amplitude;
   }
   rv += _yShift;
@@ -138,15 +222,15 @@ float funcgen::stair(float t, uint16_t steps, uint8_t mode)
 
 float funcgen::random()
 {
-  // TODO smart reseed needed
+  //  TODO smart reseed needed
   float rv = _yShift + _amplitude * _random() * 0.2328306436E-9;  // div 0xFFFFFFFF
   return rv;
 }
 
 
-// An example of a simple pseudo-random number generator is the
-// Multiply-with-carry method invented by George Marsaglia.
-// two initializers (not null)
+//  An example of a simple pseudo-random number generator is the
+//  Multiply-with-carry method invented by George Marsaglia.
+//  two initializers (not null)
 uint32_t funcgen::_random()
 {
   _m_z = 36969L * (_m_z & 65535L) + (_m_z >> 16);
@@ -155,11 +239,12 @@ uint32_t funcgen::_random()
 }
 
 
+/////////////////////////////////////////////////////////////
 //
-// INTEGER VERSIONS FOR 8 BIT DAC
+//  INTEGER VERSIONS FOR 8 BIT DAC
 //
-// 8 bits version
-// t = 0..9999 period 10000 in millis, returns 0..255
+//  8 bits version
+//  t = 0..9999 period 10000 in millis, returns 0..255
 
 /*
 
@@ -198,13 +283,14 @@ uint8_t ifgstr(uint16_t t, uint16_t period = 1000, uint16_t steps = 8)
 */
 
 
+/////////////////////////////////////////////////////////////
 //
-// SIMPLE float ONES
+//  SIMPLE float ONES
 //
-// t = 0..period
-// period = 0.001 ... 10000 ?
-/*
+//  t = 0..period
+//  period = 0.001 ... 10000 ?
 
+/*
 float fgsaw(float t, float period = 1.0)
 {
  if (t >= 0) return -1.0 + 2 * t / period;
@@ -250,12 +336,12 @@ float fgstr(float t, float period = 1.0, uint16_t steps = 8)
  int level = steps * t / period;
  return 1.0 - 2.0 * level / (steps - 1);
 }
-
 */
 
 
+/////////////////////////////////////////////////////////////
 //
-// FULL floatS ONES
+//  FULL floatS ONES
 //
 float fgsaw(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0)
 {
@@ -325,5 +411,5 @@ float fgstr(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.
 }
 
 
-// -- END OF FILE --
+//  -- END OF FILE --
 

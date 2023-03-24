@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## [0.2.5] - 2023-02-12
+- add **seedRandom(a, b)**
+- move code from .h to .cpp
 - update readme.md
 - update GitHub actions
 - update license 2023

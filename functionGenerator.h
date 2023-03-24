@@ -18,24 +18,41 @@ class funcgen
 public:
   funcgen(float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0);
 
-  //  configuration
-  void  setPeriod(float period = 1.0);
-  float getPeriod() { return _period; };
-  void  setFrequency(float freq = 1.0) { setPeriod(1/freq); };
-  float getFrequency() { return _freq1; };
 
-  void  setAmplitude(float ampl = 1.0) { _amplitude = ampl; };
-  float getAmplitude() { return _amplitude; };
-  void  setPhase(float phase = 0.0) { _phase = phase; };
-  float getPhase() { return _phase; };
-  void  setYShift(float yShift = 0.0) { _yShift = yShift; };
-  float getYShift() { return _yShift; };
-  
+  /////////////////////////////////////////////////////////////
+  //
+  //  CONFIGURATION
+  //
+  void  setPeriod(float period = 1.0);
+  float getPeriod();
+
+  void  setFrequency(float freq = 1.0);
+  float getFrequency();
+
+  void  setAmplitude(float ampl = 1.0);
+  float getAmplitude();
+
+  void  setPhase(float phase = 0.0);
+  float getPhase();
+
+  void  setYShift(float yShift = 0.0);
+  float getYShift();
+
+  void  setDutyCycle(float dutyCycle);
+  float getDutyCycle();
+
+  void  setRandomSeed(uint32_t a, uint32_t b = 314159265);
+
+
+  /////////////////////////////////////////////////////////////
+  //
+  //  FUNCTIONS
+  //
   //  constant amplitude
   float line();
   //  constant zero for calibration
   float zero();
-  
+
   //  standard wave forms
   float sawtooth(float t, uint8_t mode = 0);
   float triangle(float t);
@@ -43,6 +60,7 @@ public:
   float sinus(float t);
   float stair(float t, uint16_t steps = 8, uint8_t mode = 0);
   float random();
+
 
 private:
   float _period;
@@ -53,9 +71,11 @@ private:
   float _amplitude;
   float _phase;
   float _yShift;
+  float _dutyCycle;
+
   //  Marsaglia 'constants'
   uint32_t _m_w = 1;
-  uint32_t _m_z = 2; 
+  uint32_t _m_z = 2;
   uint32_t _random();
 };
 

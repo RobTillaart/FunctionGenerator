@@ -4,7 +4,6 @@
 // PURPOSE: demo function generators
 //    DATE: 2015-01-01
 //     URL: https://github.com/RobTillaart/FunctionGenerator
-//
 
 
 #include "functionGenerator.h"
@@ -206,5 +205,5 @@ void loop()
 }
 
 
-// -- END OF FILE --
+//  -- END OF FILE --
 
