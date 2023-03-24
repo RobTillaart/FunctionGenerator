@@ -13,7 +13,7 @@ Arduino library to generate (numeric) wave forms for a DAC.
 
 ## Description
 
-This library presents a class for a function generator in software. 
+This library presents a class for a function generator in **software**. 
 It is typical used to control one or more DAC's.
 To maximize signal quality one has to apply all (or most) processor power 
 to calculate new values over and over again to get enough resolution. 
@@ -32,21 +32,21 @@ Note that the values need to be transported to a DAC or serial port too.
 Numbers based on performance example, for one single signal.
 
 
-| Processor    | Clock    | Waveform | usec/calls | max freq |
-|:-------------|---------:|:---------|-----------:|---------:|
-| Arduino UNO  | 16 MHz   | sawtooth |  62        |    60 Hz |
-| Arduino UNO  | 16 MHz   | triangle |  74        |    50 Hz |
-| Arduino UNO  | 16 MHz   | square   |  53        |  1000 Hz |
-| Arduino UNO  | 16 MHz   | sinus    |  164       |    25 Hz |
-| Arduino UNO  | 16 MHz   | stair    |  81        |    50 Hz |
-| Arduino UNO  | 16 MHz   | random   |  37        |  1000 Hz |
-|              |          |          |            |          |
-| ESP32        | 240 MHz  | sawtooth |  3.8       |  1000 Hz |
-| ESP32        | 240 MHz  | triangle |  3.9       |  1000 Hz |
-| ESP32        | 240 MHz  | square   |  2.8       |  1000 Hz |
-| ESP32        | 240 MHz  | sinus    |  13.6      |   250 Hz |
-| ESP32        | 240 MHz  | stair    |  4.8       |   800 Hz |
-| ESP32        | 240 MHz  | random   |  1.3       |  1000 Hz |
+|  Processor    |  Clock    |  Waveform  |  usec/call  |  max freq  |
+|:--------------|----------:|:-----------|------------:|-----------:|
+|  Arduino UNO  |  16 MHz   |  sawtooth  |   62        |    60 Hz   |
+|  Arduino UNO  |  16 MHz   |  triangle  |   74        |    50 Hz   |
+|  Arduino UNO  |  16 MHz   |  square    |   53        |  1000 Hz   |
+|  Arduino UNO  |  16 MHz   |  sinus     |   164       |    25 Hz   |
+|  Arduino UNO  |  16 MHz   |  stair     |   81        |    50 Hz   |
+|  Arduino UNO  |  16 MHz   |  random    |   37        |  1000 Hz   |
+|               |           |            |             |            |
+|  ESP32        |  240 MHz  |  sawtooth  |   3.8       |  1000 Hz   |
+|  ESP32        |  240 MHz  |  triangle  |   3.9       |  1000 Hz   |
+|  ESP32        |  240 MHz  |  square    |   2.8       |  1000 Hz   |
+|  ESP32        |  240 MHz  |  sinus     |   13.6      |   250 Hz   |
+|  ESP32        |  240 MHz  |  stair     |   4.8       |   800 Hz   |
+|  ESP32        |  240 MHz  |  random    |   1.3       |  1000 Hz   |
 
 
 - assumption minimal 250 samples per period to get a smooth signal.
@@ -86,14 +86,14 @@ compared with other waves.
 
 ### Wave forms
 
-t is time in seconds
+The variable t == time in seconds.
 
-- **float sawtooth(float t, uint8_t mode = 0)** mode == 0 (default) ==>  sawtooth /|. mode == 1 ==> sawtooth |\.
+- **float sawtooth(float t, uint8_t mode = 0)** mode == 0 (default) ==>  sawtooth /|. mode == 1 ==> sawtooth |\\.
 - **float triangle(float t)** triangle form, duty cycle 50%.
 - **float square(float t)** square wave with duty cycle 50%.
 - **float sinus(float t)** sinus wave, has no duty cycle. 
 - **float stair(float t, uint16_t steps = 8, uint8_t mode = 0)** mode = 0 ==> steps up, mode = 1 steps down.
-- **float random()** noise generation.
+- **float random()** random noise generation.
 - **float line()** constant voltage line. Depends on the set YShift and amplitude.
 - **float zero()** constant zero.
 
@@ -109,35 +109,48 @@ See examples.
 ## Future
 
 
-#### waveforms
+#### Must
 
-- square duty-cycle  (will be slower!)
-- triangle duty-cycle (makes sawtooth a special triangle)
+- documentation
+  - quality of signals, max freq etc
+  
+
+#### Should
+
+- investigate duty cycle for waveforms
+  - Derived class for the duty cycle variants? or functions!
+  - **float squareDC()** performance (loss)
+  - **float triangleDC()**
+  - **float sawtoothDC()**
+  - **float sinusDC()** duty-cycle for sinus what does it mean. 
+    - ==> move peaks, two half sinus with diff frequency
+  - **float stairDC()**
+- add **seedRandom(a, b)**
+- move code from .h to .cpp
+
+
+#### Could
+
 - trapezium wave (would merge square and triangle and sawtooth)
 - Bezier curve?
-
-#### investigate
-
-- duty-cycle for sinus what does it mean. move peak.
 - white noise, pink noise etc.
 - investigate algorithms for performance gains (DAC specific values 10-12-16 bit)
 - Amplitude modulation ?
-- external clock to synchronize two or more sw function generators.
+- external clock to synchronize two or more software function generators.
 - RC function curve.
 - heartbeat curve?
-- record a signal and play back
-
-#### misc
-
+- record a signal and play back  (separate class?)
+- seed value random generator?
 - stand-alone functions in separate .h?
-- mapping to voltage function.
 - check for synergy with https://github.com/RobTillaart/AD985X
 
 #### examples
 
-- example ESP32 version as separate task...
+- example ESP32 version as separate task.
 - example with DAC. 8 12 16 bit.
 - example with potentiometers for 4 parameters
+
+#### Wont
 
 
 

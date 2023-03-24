@@ -33,6 +33,7 @@ unittest_setup()
   fprintf(stderr, "FUNCTIONGENERATOR_LIB_VERSION: %s\n", (char*) FUNCTIONGENERATOR_LIB_VERSION);
 }
 
+
 unittest_teardown()
 {
 }
@@ -114,4 +115,6 @@ unittest(test_line_zero)
 
 unittest_main()
 
-// --------
+
+//  -- END OF FILE --
+
