@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add **setDutyCycle()**
 - add **getDutyCycle()**
 - add **seedRandom(a, b)**
+- add some optimizations
 - move code from .h to .cpp
 - update readme.md
 - update GitHub actions

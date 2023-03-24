@@ -130,14 +130,14 @@ float funcgen::sawtooth(float t, uint8_t mode)
   t += _phase;
   if (t >= 0.0)
   {
-    if (t >= _period) t = fmod(t, _period);
+    t = fmod(t, _period);
     if (mode == 1) t = _period - t;
     rv = _amplitude * (-1.0 + t *_freq2);
   }
   else
   {
     t = -t;
-    if (t >= _period) t = fmod(t, _period);
+    t = fmod(t, _period);
     if (mode == 1) t = _period - t;
     rv = _amplitude * ( 1.0 - t * _freq2);
   }
@@ -154,7 +154,7 @@ float funcgen::triangle(float t)
   {
     t = -t;
   }
-  if (t >= _period) t = fmod(t, _period);
+  t = fmod(t, _period);
   if (t < (_period * _dutyCycle))
   {
     rv = _amplitude * (-1.0 + t * _freq2 / _dutyCycle);
@@ -176,14 +176,14 @@ float funcgen::square(float t)
   t += _phase;
   if (t >= 0)
   {
-    if (t >= _period) t = fmod(t, _period);
+    t = fmod(t, _period);
     if (t < (_period * _dutyCycle)) rv = _amplitude;
     else rv = -_amplitude;
   }
   else
   {
     t = -t;
-    if (t >= _period) t = fmod(t, _period);
+    t = fmod(t, _period);
     if (t < (_period * _dutyCycle)) rv = -_amplitude;
     else rv = _amplitude;
   }
@@ -207,13 +207,13 @@ float funcgen::stair(float t, uint16_t steps, uint8_t mode)
   t += _phase;
   if (t >= 0)
   {
-    if (t >= _period) t = fmod(t, _period);
+    t = fmod(t, _period);
     if (mode == 1) t = _period - t;
     int level = steps * t / _period;
     return _yShift + _amplitude * (-1.0 + 2.0 * level / (steps - 1));
   }
   t = -t;
-  if (t >= _period) t = fmod(t, _period);
+  t = fmod(t, _period);
   if (mode == 1) t = _period - t;
   int level = steps * t / _period;
   return _yShift + _amplitude * (1.0 - 2.0 * level / (steps - 1));

@@ -25,32 +25,33 @@ Note: this class generates float values, performance wise this can be optimized,
 to achieve higher speeds at cost of accuracy / precision.
 
 
-## Performance
+#### Performance
 
 Indication of what performance can be expected (based upon 0.2.1 version).  
 Note that the values need to be transported to a DAC or serial port too.  
 Numbers based on performance example, for one single signal.
 
 
-|  Processor    |  Clock    |  Waveform  |  usec/call  |  max freq  |
-|:--------------|----------:|:-----------|------------:|-----------:|
-|  Arduino UNO  |  16 MHz   |  sawtooth  |   62        |    60 Hz   |
-|  Arduino UNO  |  16 MHz   |  triangle  |   74        |    50 Hz   |
-|  Arduino UNO  |  16 MHz   |  square    |   53        |  1000 Hz   |
-|  Arduino UNO  |  16 MHz   |  sinus     |   164       |    25 Hz   |
-|  Arduino UNO  |  16 MHz   |  stair     |   81        |    50 Hz   |
-|  Arduino UNO  |  16 MHz   |  random    |   37        |  1000 Hz   |
-|               |           |            |             |            |
-|  ESP32        |  240 MHz  |  sawtooth  |   3.8       |  1000 Hz   |
-|  ESP32        |  240 MHz  |  triangle  |   3.9       |  1000 Hz   |
-|  ESP32        |  240 MHz  |  square    |   2.8       |  1000 Hz   |
-|  ESP32        |  240 MHz  |  sinus     |   13.6      |   250 Hz   |
-|  ESP32        |  240 MHz  |  stair     |   4.8       |   800 Hz   |
-|  ESP32        |  240 MHz  |  random    |   1.3       |  1000 Hz   |
+|  Processor    |  Clock    |  Waveform  |  usec/call  |  max freq  | max val/period |
+|:--------------|----------:|:-----------|------------:|-----------:|--------:|
+|  Arduino UNO  |  16 MHz   |  sawtooth  |   62        |    60 Hz   |   268   |
+|  Arduino UNO  |  16 MHz   |  triangle  |   74        |    50 Hz   |   270   |
+|  Arduino UNO  |  16 MHz   |  square    |   53        |  1000 Hz   |    19   |
+|  Arduino UNO  |  16 MHz   |  sinus     |   164       |    25 Hz   |   152   |
+|  Arduino UNO  |  16 MHz   |  stair     |   81        |    50 Hz   |   246   |
+|  Arduino UNO  |  16 MHz   |  random    |   37        |  1000 Hz   |    27   |
+|               |           |            |             |            |         |
+|  ESP32        |  240 MHz  |  sawtooth  |   3.8       |  1000 Hz   |   263   |
+|  ESP32        |  240 MHz  |  triangle  |   3.9       |  1000 Hz   |   256   |
+|  ESP32        |  240 MHz  |  square    |   2.8       |  1000 Hz   |   357   |
+|  ESP32        |  240 MHz  |  sinus     |   13.6      |   250 Hz   |   294   |
+|  ESP32        |  240 MHz  |  stair     |   4.8       |   800 Hz   |   260   |
+|  ESP32        |  240 MHz  |  random    |   1.3       |  1000 Hz   |   769   |
 
 
-- assumption minimal 250 samples per period to get a smooth signal.
-  if a rougher signal is OK, higher frequencies are possible.
+- Assumption minimal around 250 samples per period to get a smooth signal.
+  If a rougher signal is OK, higher frequencies are possible.
+  For square and random  less samples per period are often acceptable.
 - ESP32 can do more calculations however 1000 Hz seems to be a nice 
   upper limit for a software based function generator.
 - if one wants to control multiple DAC's one need to divide the numbers
@@ -58,6 +59,23 @@ Numbers based on performance example, for one single signal.
 
 
 Note: hardware function generator https://github.com/RobTillaart/AD985X
+
+
+Note: 0.2.5 due to duty cycle the triangle and square 
+have become slightly slower.
+
+|  Processor    |  Clock    |  Waveform  |  usec/call  |  max freq  |
+|:--------------|----------:|:-----------|------------:|-----------:|
+|  Arduino UNO  |  16 MHz   |  triangle  |   84        |    50 Hz   |
+|  Arduino UNO  |  16 MHz   |  square    |   57        |  1000 Hz   |
+
+
+#### Accuracy
+
+If the time parameter **t** grows large, the internal math may have rounding 
+problems after some time. This can and will affect the quality of the output.
+
+Needs further investigations.
 
 
 ## Interface
@@ -90,7 +108,7 @@ compared with other waves.
 Experimental, not all waveforms have a duty cycle.
 Duty cycle must be between 0 and 100%.
 - **float getDutyCycle()** returns the set duty cycle.
-- **void  setRandomSeed(uint32_t a, uint32_t b = 314159265)** initial seed for the
+- **void  setRandomSeed(uint32_t a, uint32_t b = 314159265)** initial seeds for the
 (Marsaglia) random number generator. 
 
 
@@ -99,23 +117,24 @@ Duty cycle must be between 0 and 100%.
 The variable t == time in seconds.
 
 - **float sawtooth(float t, uint8_t mode = 0)** mode == 0 (default) ==>  sawtooth /|. mode == 1 ==> sawtooth |\\.
-- **float triangle(float t)** triangle form, duty cycle 50%.
-- **float square(float t)** square wave with duty cycle 50%.
+- **float triangle(float t)** triangle form, duty cycle default 50%.
+- **float square(float t)** square wave with duty cycle default 50%.
 - **float sinus(float t)** sinus wave, has no duty cycle. 
 - **float stair(float t, uint16_t steps = 8, uint8_t mode = 0)** mode = 0 ==> steps up, mode = 1 steps down.
 - **float random()** random noise generation.
-- **float line()** constant voltage line. Depends on the set YShift and amplitude.
+- **float line()** constant voltage line. 
+Height depends on the set YShift and amplitude.
 - **float zero()** constant zero.
 
-Line() and zero() are functions that can be used to drive a constant voltage from a DAC 
-and can be used to calibrate the generator / DAC combination.
+The functions **line()** and **zero()** can be used to drive a constant voltage 
+from a DAC and can be used to calibrate the generator / DAC combination.
 
 
 #### Experimental
 
 Since 0.2.5 experimental support for duty cycle has been added.
 
-In first iteration only **square** and **triangle** support duty cycle.
+In first iteration only **square()** and **triangle()** implement duty cycle.
 The other functions need to be investigated what duty cycle means, and
 if it is (easy) implementable.
 
@@ -128,24 +147,30 @@ Feedback is welcome.
 #### Must
 
 - documentation
-  - quality of signals, max freq etc
+  - quality of signals - after substantial time t
+  - max freq per wave form etc.
+    Should this be in the library?
 
 
 #### Should
 
-- smart reseed needed for random()
-- initialize random generator with compile time
+- smart reseed needed for random().
+- initialize random generator with compile time.
 
 
 #### Could
 
-- trapezium wave (would merge square and triangle and sawtooth)
-- white noise, pink noise etc.
-- investigate algorithms for performance gains (DAC specific values 10-12-16 bit)
-- external clock to synchronize two or more software function generators.
+- waves
+  - trapezium wave (could merge square and triangle and sawtooth)
+  - white noise, pink noise etc.
 - RC function curve.
+- external clock to synchronize two or more software function generators.
 - stand-alone functions in separate .h
 - check for synergy with https://github.com/RobTillaart/AD985X
+- investigate performance.
+  - algorithms for DAC specific gains e.g. 10-12-16 bit.
+  - improve performance sin() lookup table.
+  - add float variable for ```_perDC = _period * _dutyCycle```
 
 
 #### Examples
