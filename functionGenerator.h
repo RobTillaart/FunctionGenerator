@@ -49,16 +49,18 @@ public:
   //
   //  constant amplitude
   float line();
-  //  constant zero for calibration
+  //  constant zero for calibration.
   float zero();
 
   //  standard wave forms
-  float sawtooth(float t, uint8_t mode = 0);
+  float sawtooth(float t, uint8_t mode = 0);   //  0 ==>  /|.   1 ==> sawtooth |\.
   float triangle(float t);
   float square(float t);
   float sinus(float t);
   float stair(float t, uint16_t steps = 8, uint8_t mode = 0);
+
   float random();
+  float random_DC();  //  duty cycle variant. Experimental.
 
 
 private:

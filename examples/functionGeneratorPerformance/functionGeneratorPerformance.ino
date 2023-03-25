@@ -37,6 +37,8 @@ void setup()
   delay(10);
   test_random();
   delay(10);
+  test_random_DC();
+  delay(10);
   test_line();
   delay(10);
   test_zero();
@@ -158,6 +160,22 @@ void test_random()
   for (int i = 0; i < 10000; i++)
   {
     t = gen.random();
+  }
+  stop = micros();
+  Serial.print(__FUNCTION__);
+  Serial.print(":\t");
+  Serial.print((stop - start) / 10000.0);
+  Serial.print("\t");
+  Serial.println(1000000.0 / ((stop - start) / 10000.0));
+}
+
+
+void test_random_DC()
+{
+  start = micros();
+  for (int i = 0; i < 10000; i++)
+  {
+    t = gen.random_DC();
   }
   stop = micros();
   Serial.print(__FUNCTION__);

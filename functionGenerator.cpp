@@ -103,6 +103,9 @@ float funcgen::getDutyCycle()
 
 void funcgen::setRandomSeed(uint32_t a, uint32_t b)
 {
+  //  prevent zero loops in random() function.
+  if (a == 0) a = 123;
+  if (b == 0) b = 456;
   _m_w = a;
   _m_z = b;
 }
@@ -164,7 +167,7 @@ float funcgen::triangle(float t)
     //  mirror math
     t = _period - t;
     rv = _amplitude * (-1.0 + t * _freq2 /(1 - _dutyCycle));
-  }  
+  }
   rv += _yShift;
   return rv;
 }
@@ -222,10 +225,20 @@ float funcgen::stair(float t, uint16_t steps, uint8_t mode)
 
 float funcgen::random()
 {
-  //  TODO smart reseed needed
   float rv = _yShift + _amplitude * _random() * 0.2328306436E-9;  // div 0xFFFFFFFF
   return rv;
 }
+
+
+//  duty cycle variant takes more than twice as much time.
+float funcgen::random_DC()
+{
+  static float rv = 0;
+  float next = _yShift + _amplitude * _random() * 0.2328306436E-9;  //  div 0xFFFFFFFF
+  rv += (next - rv) * _dutyCycle;
+  return rv;
+}
+
 
 
 //  An example of a simple pseudo-random number generator is the

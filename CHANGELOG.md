@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## [0.2.5] - 2023-03-25
-- add **setDutyCycle()**
-- add **getDutyCycle()**
+- add **setDutyCycle()**, **getDutyCycle()**
+- implement duty cycle for square(), triangle() and random()
 - add **seedRandom(a, b)**
 - add some optimizations
 - move code from .h to .cpp

@@ -54,6 +54,8 @@ void loop()
   //    Serial.print("\t");
   //  Serial.print(gen.random());
   //  Serial.print("\t");
+  //  Serial.print(gen.random_DC());
+  //  Serial.print("\t");
   //  Serial.print(gen.line());
   //  Serial.print("\t");
   //  Serial.print(gen.zero());

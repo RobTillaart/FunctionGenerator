@@ -97,49 +97,79 @@ Default dutyCycle is 50%.
 - **float getPeriod()** returns the set period.
 - **void  setFrequency(float frequency = 1.0)** set the frequency of the wave in Hertz (1/s).
 - **float getFrequency()** returns the set frequency in Hertz.
-- **void  setAmplitude(float amplitude = 1.0)** sets the amplitude of the wave. TODO point to point?
-Setting the amplitude to 0 gives ?what? 
+- **void  setAmplitude(float amplitude = 1.0)** sets the amplitude of the wave.
+The range is from **-amplitude** to **+amplitude**.
+Setting the amplitude to 0 gives effectively a zero signal.
+Setting the amplitude to a negative value effectively inverts the signal.
 - **float getAmplitude()** returns the set amplitude.
-- **void  setPhase(float phase = 0.0)** shifts the phase of the wave. Will only be noticeable when 
-compared with other waves.
+- **void  setPhase(float phase = 0.0)** shifts the phase of the wave. 
+Will only be noticeable when compared with other waves.
+Phase is also known as the X- or horizontal shift.
 - **float getPhase()** returns the set phase.
-- **void  setYShift(float yShift = 0.0)** sets an Y-shift in amplitude, allows to set some zero point.
+- **void  setYShift(float yShift = 0.0)** sets an Y-shift or vertical offset in amplitude.
+This allows to set e.g. the zero level.
 - **float getYShift()** returns the set Y-shift.
 - **void  setDutyCycle(float percentage = 100)** sets the duty cycle of the signal.
-Experimental, not all waveforms have a duty cycle.
-Duty cycle must be between 0 and 100% will be clipped otherwise.
+Experimental, not all waveforms have a duty cycle or interpret it differently, see below.
+Duty cycle must be between 0 and 100% and will be clipped otherwise.
 - **float getDutyCycle()** returns the set duty cycle.
-- **void  setRandomSeed(uint32_t a, uint32_t b = 314159265)** initial seeds for the
-(Marsaglia) random number generator. 
+- **void  setRandomSeed(uint32_t a, uint32_t b = 314159265)** sets the initial seeds for the
+(Marsaglia) random number generator. The first is mandatory, the second is optional.
 
 
 #### Wave forms
 
 The variable t == time in seconds.
 
-- **float sawtooth(float t, uint8_t mode = 0)** mode == 0 (default) ==>  sawtooth /|. mode == 1 ==> sawtooth |\\.
-- **float triangle(float t)** triangle form, duty cycle default 50%.
+- **float sawtooth(float t, uint8_t mode = 0)** mode 0 is default.
+  - mode == 0 ==>  sawtooth /|. 
+  - mode == 1 ==> sawtooth |\\. Effectively equals inverting the amplitude.
+- **float triangle(float t)** triangle form, duty cycle default 50%. 
 - **float square(float t)** square wave with duty cycle default 50%.
 - **float sinus(float t)** sinus wave, has no duty cycle. 
-- **float stair(float t, uint16_t steps = 8, uint8_t mode = 0)** mode = 0 ==> steps up, mode = 1 steps down.
+- **float stair(float t, uint16_t steps = 8, uint8_t mode = 0)** defaults to 8 steps up.
+  - mode = 0 ==> steps up
+  - mode = 1 ==> steps down. Effectively equals inverting the amplitude.
 - **float random()** random noise generation.
 - **float line()** constant voltage line. 
-Height depends on the set YShift and amplitude.
+Height depends on the YShift and amplitude.
 - **float zero()** constant zero.
 
 The functions **line()** and **zero()** can be used to drive a constant voltage 
 from a DAC and can be used to calibrate the generator / DAC combination.
 
 
-#### Experimental
+#### Duty Cycle 
 
-Since 0.2.5 experimental support for duty cycle has been added.
+Since 0.2.5 the library has **experimental** support for duty cycle.
+The meaning of duty cycle differs per wave form.
+Implementation may change in the future.
 
-In first iteration only **square()** and **triangle()** implement duty cycle.
-The other functions need to be investigated what duty cycle means, and
-if it is (easy) implementable.
+In first iteration the following behaviour is implemented:
 
-Feedback is welcome.
+- **square()** implements duty cycle in a well known way. 
+At the start of the period the signal goes "HIGH".
+After duty cycle % of the period the signal goes LOW until the end of the period.
+- **triangle()** function uses the duty cycle to shift the peak from the
+begin (0%) to middle (50%) to end (100%) of the period. 
+- **random_DC()** A duty cycle of 0% is no noise 100% is full amplitude noise 
+with respect to previous value. 
+Implemented as a weighed average between new and previous value.
+Made a separate function as handling the duty cycle slows performance substantial.
+Initial starts at zero and can be adjusted with **YShift()**.
+
+
+The other functions need to be investigated what duty cycle means.
+Current ideas that are **NOT** implemented:
+
+- **sawtooth()** - move from /|. to /|__  so 0% is a spike, 100% = normal.
+Think of it as the halve of the triangle wave.
+- **sinus()** move the two peaks like the triangle (adjusting steepness / freq)??
+- **stair()** like sawtooth??
+- **line()** has no period so does not make sense (yet).
+- **zero()** has no period so does not make sense (yet).
+
+Feedback and ideas are welcome.
 
 
 ## Future
@@ -172,6 +202,7 @@ Feedback is welcome.
   - algorithms for DAC specific gains e.g. 10-12-16 bit.
   - improve performance sin() lookup table.
   - add float variable for ```_perDC = _period * _dutyCycle```
+  - do we need **freq4** ? not since DC.
 
 
 #### Examples
