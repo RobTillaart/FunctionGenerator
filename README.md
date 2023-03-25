@@ -40,7 +40,6 @@ Numbers based on performance example, for one single signal.
 |  Arduino UNO  |  16 MHz   |  sinus     |   164       |    25 Hz   |   152   |
 |  Arduino UNO  |  16 MHz   |  stair     |   81        |    50 Hz   |   246   |
 |  Arduino UNO  |  16 MHz   |  random    |   37        |  1000 Hz   |    27   |
-|               |           |            |             |            |         |
 |  ESP32        |  240 MHz  |  sawtooth  |   3.8       |  1000 Hz   |   263   |
 |  ESP32        |  240 MHz  |  triangle  |   3.9       |  1000 Hz   |   256   |
 |  ESP32        |  240 MHz  |  square    |   2.8       |  1000 Hz   |   357   |
@@ -54,8 +53,8 @@ Numbers based on performance example, for one single signal.
   For **square()** and **random()** less samples per period are often acceptable.
 - ESP32 can do more calculations however 1000 Hz seems to be a nice 
   upper limit for a software based function generator.
-- If one wants to control multiple DAC's one need to divide the numbers
-  and round down.
+- If one needs to control multiple DAC's one should divide the numbers
+  and round down to get an estimate.
 
 
 Note: hardware function generator https://github.com/RobTillaart/AD985X
@@ -68,6 +67,7 @@ have become slightly slower.
 |:--------------|----------:|:-----------|------------:|-----------:|
 |  Arduino UNO  |  16 MHz   |  triangle  |   84        |    50 Hz   |
 |  Arduino UNO  |  16 MHz   |  square    |   57        |  1000 Hz   |
+|  Arduino UNO  |  16 MHz   |  random_DC |   68        |   500 Hz   |
 
 
 #### Accuracy
