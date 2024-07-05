@@ -16,12 +16,14 @@ funcgen gen;
 void setup()
 {
   Serial.begin(115200);
-  //  Serial.print("Start functionGeneratorPerformance - LIB VERSION: ");
+  //  Serial.println(__FILE__);
+  //  Serial.print("FUNCTIONGENERATOR_LIB_VERSION: ");
   //  Serial.println(FUNCTIONGENERATOR_LIB_VERSION);
+  //  Serial.println();
 
   gen.setAmplitude(50);
   gen.setFrequency(1);
-  gen.setDutyCycle(25);
+  gen.setDutyCycle(100);
 }
 
 
@@ -50,7 +52,11 @@ void loop()
   //  Serial.print("\t");
   //  Serial.print(gen.sinusDiode(t));
   //  Serial.print("\t");
-  Serial.print(gen.sinusRectified(t));
+  //  Serial.print(gen.sinusRectified(t));
+  //  Serial.print("\t");
+  Serial.print(gen.trapezium1(t));
+  Serial.print("\t");
+  Serial.print(gen.trapezium2(t));
   //  Serial.print("\t");
   //    Serial.print(gen.stair(t, 16, 0));  //  step up
   //    Serial.print("\t");

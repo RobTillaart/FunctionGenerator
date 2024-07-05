@@ -72,6 +72,8 @@ have become slightly slower.
 |  Arduino UNO  |  16 MHz   |  square    |   57        |  1000 Hz   |
 |  Arduino UNO  |  16 MHz   |  random_DC |   68        |   500 Hz   |
 
+See **functionGeneratorPerformance.ino**
+
 
 #### Accuracy
 
@@ -130,10 +132,6 @@ The variable t == time in seconds.
 - **float triangle(float t)** triangle form, duty cycle default 50%. 
 - **float square(float t)** square wave with duty cycle default 50%.
 - **float sinus(float t)** sinus wave, has no duty cycle.
-- **float sinusDiode(float t)** sinus wave, only positive pulses.
-(Better name welcome).
-- **float sinusRectified(float t)** sinus wave, with "abs(negative pulses)".
-(Better name welcome).
 - **float stair(float t, uint16_t steps = 8, uint8_t mode = 0)** defaults to 8 steps up.
   - mode = 0 ==> steps up
   - mode = 1 ==> steps down. Effectively equals inverting the amplitude.
@@ -145,6 +143,17 @@ Height depends on the YShift and amplitude.
 The functions **line()** and **zero()** can be used to drive a constant voltage 
 from a DAC and can be used to calibrate the generator / DAC combination.
 
+
+Experimental 0.2.7
+
+- **float sinusDiode(float t)** sinus wave, only positive pulses.  
+(better name welcome).
+- **float sinusRectified(float t)** sinus wave, with "abs(negative pulses)".  
+(better name welcome).
+- **float trapezium1(float t)** trapezium wave, DutyCycle changes steepness falling rising.
+- **float trapezium2(float t)** trapezium wave, DutyCycle changes period HIGH vs LOW
+
+Note at 50% DC the two trapezium functions are identical.
 
 #### Duty Cycle 
 
@@ -164,7 +173,14 @@ with respect to previous value.
 Implemented as a weighed average between new and previous value.
 Made a separate function as handling the duty cycle slows performance substantial.
 Initial starts at zero and can be adjusted with **YShift()**.
+- **float trapezium1(float t)** The duty cycle determines the steepness of the rising
+and falling edges. This changes the form from square wave to trapezium to triangle.
+The length of the HIGH LOW level go from 0 to half a period.
+- **float trapezium2(float t)** The duty cycle determines the length of the HIGH level,
+which is 0 for 0% DC and half a period for 100% DC. 
+The rising and falling edges stay same.
 
+#### No duty cycle
 
 The other functions need to be investigated what duty cycle means.
 Current ideas that are **NOT** implemented:
@@ -175,12 +191,14 @@ Think of it as the halve of the triangle wave.
 - **stair()** like sawtooth??
 - **line()** has no period so does not make sense (yet).
 - **zero()** has no period so does not make sense (yet).
+- **float sinusDiode(float t)**
+- **float sinusRectified(float t)**
+
 
 Feedback and ideas are welcome.
 
 
 ## Future
-
 
 #### Must
 
@@ -189,18 +207,17 @@ Feedback and ideas are welcome.
   - max freq per wave form etc.
     Should this be in the library?
 
-
 #### Should
 
 - smart reseed needed for random().
 - initialize random generator with compile time.
 
-
 #### Could
 
 - waves
-  - trapezium wave (could merge square and triangle and sawtooth)
   - white noise, pink noise etc.
+  - heart beat (quite complex but fun)
+  - multiMap interpolation point curves.
 - RC function curve.
 - external clock to synchronize two or more software function generators.
 - stand-alone functions in separate .h
@@ -210,7 +227,6 @@ Feedback and ideas are welcome.
   - improve performance sin() lookup table.
   - add float variable for ```_perDC = _period * _dutyCycle```
   - do we need **freq4** ? not since DC.
-
 
 #### Examples
 

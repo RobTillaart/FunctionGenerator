@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.2.7] - 2024-07-05
 - add **float sinusDiode(float t)**
 - add **float sinusRectified(float t)**
+- add **float trapezium1(float t)** with duty cycle.
+- add **float trapezium2(float t)** with duty cycle.
+- update **functionGeneratorPerformance.ino**
+- fix Arduino-lint.yml (long library name error)
 - minor edits
 
 ## [0.2.6] - 2023-11-02

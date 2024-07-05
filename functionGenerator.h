@@ -57,9 +57,11 @@ public:
   float triangle(float t);
   float square(float t);
   float sinus(float t);
-  float sinusDiode(float t);
-  float sinusRectified(float t);
+  float sinusDiode(float t);      //  Experimental.
+  float sinusRectified(float t);  //  Experimental.
   float stair(float t, uint16_t steps = 8, uint8_t mode = 0);
+  float trapezium1(float t);      //  Experimental.
+  float trapezium2(float t);      //  Experimental.
 
   float random();
   float random_DC();  //  duty cycle variant. Experimental.

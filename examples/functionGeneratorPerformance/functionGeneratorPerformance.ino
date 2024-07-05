@@ -20,10 +20,12 @@ funcgen gen;
 void setup()
 {
   Serial.begin(115200);
-  Serial.print("Start functionGeneratorPerformance - LIB VERSION: ");
+  Serial.println(__FILE__);
+  Serial.print("FUNCTIONGENERATOR_LIB_VERSION: ");
   Serial.println(FUNCTIONGENERATOR_LIB_VERSION);
+  Serial.println();
 
-  Serial.println("func \t\tusec\tmax calls/sec");
+  Serial.println("func \t\tusec\tmax calls/sec  (indicative)");
   y = analogRead(A0) / 1024;
   test_square();
   delay(10);
@@ -43,9 +45,15 @@ void setup()
   delay(10);
   test_zero();
   delay(10);
+  test_sinusDiode();
+  delay(10);
+  test_sinusRectified();
+  delay(10);
+  test_trapezium2();
+  delay(10);
   Serial.println();
 
-  Serial.println("t \t sqr\t saw\t tri\t sin\t str\t rnd\t line\t zero");
+  Serial.println("t \t sqr\t saw\t tri\t sin\t str\t rnd\t line\t zero\t sinD\t sinR\t trap");
   for (int i = -400; i < 400; i += 2)
   {
     float t = i * 0.01;
@@ -66,6 +74,12 @@ void setup()
     Serial.print(gen.line());
     Serial.print("\t");
     Serial.print(gen.zero());
+    Serial.print("\t");
+    Serial.print(gen.sinusDiode(t));
+    Serial.print("\t");
+    Serial.print(gen.sinusRectified(t));
+    Serial.print("\t");
+    Serial.print(gen.trapezium2(t));
     Serial.println();
   }
   Serial.println("\ndone...");
@@ -218,10 +232,57 @@ void test_zero()
 }
 
 
+void test_sinusDiode()
+{
+  start = micros();
+  for (int i = 0; i < 10000; i++)
+  {
+    t = gen.sinusDiode(i);
+  }
+  stop = micros();
+  Serial.print(__FUNCTION__);
+  Serial.print(":\t");
+  Serial.print((stop - start) / 10000.0);
+  Serial.print("\t");
+  Serial.println(1000000.0 / ((stop - start) / 10000.0));
+}
+
+
+void test_sinusRectified()
+{
+  start = micros();
+  for (int i = 0; i < 10000; i++)
+  {
+    t = gen.sinusRectified(i);
+  }
+  stop = micros();
+  Serial.print(__FUNCTION__);
+  Serial.print(":\t");
+  Serial.print((stop - start) / 10000.0);
+  Serial.print("\t");
+  Serial.println(1000000.0 / ((stop - start) / 10000.0));
+}
+
+
+void test_trapezium2()
+{
+  start = micros();
+  for (int i = 0; i < 10000; i++)
+  {
+    t = gen.trapezium2(i);
+  }
+  stop = micros();
+  Serial.print(__FUNCTION__);
+  Serial.print(":\t");
+  Serial.print((stop - start) / 10000.0);
+  Serial.print("\t");
+  Serial.println(1000000.0 / ((stop - start) / 10000.0));
+}
+
+
 void loop()
 {
 }
 
 
 //  -- END OF FILE --
-

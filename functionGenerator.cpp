@@ -271,7 +271,94 @@ float funcgen::random_DC()
 }
 
 
+float funcgen::trapezium1(float t)
+{
+  if (t < 0)
+  {
+    t = -t;
+  }
+  t = fmod(t, _period);
 
+  if (t < _period * 0.5 * _dutyCycle)  //  rising part
+  {
+    return -_amplitude + 2 * _amplitude * (t * 2  / (_period * _dutyCycle));
+  }
+  else if (t < _period * 0.5)  //  high part
+  {
+    return _amplitude;
+  }
+  else if (t < _period * (0.5 + 0.5 * _dutyCycle))  //  falling part
+  {
+    return _amplitude - 2 * _amplitude * ( (t * 2 - _period) / (_period * _dutyCycle));
+  }
+  else   //  low part
+  {
+    return -_amplitude;
+  }
+}
+
+
+float funcgen::trapezium2(float t)
+{
+  if (t < 0)
+  {
+    t = -t;
+  }
+  t = fmod(t, _period);
+
+  if (t < _period * 0.25)  //  rising part
+  {
+    return -_amplitude + 2 * _amplitude * (t * 4 / _period);
+  }
+  else if (t < _period * (0.25 + 0.5 * _dutyCycle))  //  high part
+  {
+    return _amplitude;
+  }
+  else if (t < _period * (0.5 + 0.5 * _dutyCycle))  //  falling part
+  {
+    return _amplitude - 2 * _amplitude * ((t - _period * (0.25 + 0.5 * _dutyCycle)) * 4 / _period);
+  }
+  else   //  low part
+  {
+    return -_amplitude;
+  }
+}
+
+
+/*
+// no DC version (50%
+float funcgen::trapezium(float t)
+{
+  if (t < 0)
+  {
+    t = -t;
+  }
+  t = fmod(t, _period);
+
+  if (t < _period * 0.25)  //  rising part
+  {
+    return -_amplitude + 2 * _amplitude * (t * 4 / _period);
+  }
+  else if (t < _period * 0.5)  //  high part
+  {
+    return _amplitude;
+  }
+  else if (t < _period * 0.75)  //  high part
+  {
+    return _amplitude - 2 * _amplitude * ((t - _period/2) * 4 / _period);
+  }
+  else   //  low part
+  {
+    return -_amplitude;
+  }
+}
+*/
+
+
+/////////////////////////////////////////////////////////////
+//
+//  PRIVATE
+//
 //  An example of a simple pseudo-random number generator is the
 //  Multiply-with-carry method invented by George Marsaglia.
 //  two initializers (not null)
@@ -281,6 +368,7 @@ uint32_t funcgen::_random()
   _m_w = 18000L * (_m_w & 65535L) + (_m_w >> 16);
   return (_m_z << 16) + _m_w;  /* 32-bit result */
 }
+
 
 
 /////////////////////////////////////////////////////////////
@@ -387,6 +475,7 @@ float fgstr(float t, float period = 1.0, uint16_t steps = 8)
 //
 //  FULL floatS ONES
 //
+//  SAWTOOTH
 float fgsaw(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0)
 {
   t += phase;
@@ -401,6 +490,7 @@ float fgsaw(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.
 }
 
 
+//  TRIANGLE
 float fgtri(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0, float dutyCycle = 0.50)
 {
   t += phase;
@@ -415,6 +505,7 @@ float fgtri(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.
 }
 
 
+//  SQUARE
 float fgsqr(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0, float dutyCycle = 0.50)
 {
   t += phase;
@@ -431,6 +522,7 @@ float fgsqr(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.
 }
 
 
+//  SINUS
 float fgsin(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0)
 {
   t += phase;
@@ -439,6 +531,7 @@ float fgsin(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.
 }
 
 
+//  STAIR
 float fgstr(float t, float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0, uint16_t steps = 8)
 {
   t += phase;
