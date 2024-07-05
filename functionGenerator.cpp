@@ -273,6 +273,7 @@ float funcgen::random_DC()
 
 float funcgen::trapezium1(float t)
 {
+  t += _phase + _period / 8;  //  zero point for t = 0
   if (t < 0)
   {
     t = -t;
@@ -300,6 +301,7 @@ float funcgen::trapezium1(float t)
 
 float funcgen::trapezium2(float t)
 {
+  t += _phase + _period / 8;  //  zero point for t = 0
   if (t < 0)
   {
     t = -t;
