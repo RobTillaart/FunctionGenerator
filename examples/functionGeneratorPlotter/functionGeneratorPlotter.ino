@@ -21,9 +21,9 @@ void setup()
   //  Serial.println(FUNCTIONGENERATOR_LIB_VERSION);
   //  Serial.println();
 
-  gen.setAmplitude(50);
-  gen.setFrequency(1);
-  gen.setDutyCycle(100);
+  gen.setAmplitude(80);
+  gen.setFrequency(65.0/60.0);  //  HB = BPM/60.0
+  gen.setDutyCycle(50);
 }
 
 
@@ -54,9 +54,11 @@ void loop()
   //  Serial.print("\t");
   //  Serial.print(gen.sinusRectified(t));
   //  Serial.print("\t");
-  Serial.print(gen.trapezium1(t));
-  Serial.print("\t");
-  Serial.print(gen.trapezium2(t));
+  //  Serial.print(gen.trapezium1(t));
+  //  Serial.print("\t");
+  //  Serial.print(gen.trapezium2(t));
+  //  Serial.print("\t");
+  Serial.print(gen.mm(t));
   //  Serial.print("\t");
   //    Serial.print(gen.stair(t, 16, 0));  //  step up
   //    Serial.print("\t");

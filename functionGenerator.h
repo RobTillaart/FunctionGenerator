@@ -62,6 +62,7 @@ public:
   float stair(float t, uint16_t steps = 8, uint8_t mode = 0);
   float trapezium1(float t);      //  Experimental.
   float trapezium2(float t);      //  Experimental.
+  float mm(float t);              //  Experimental.
 
   float random();
   float random_DC();  //  duty cycle variant. Experimental.

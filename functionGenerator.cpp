@@ -273,7 +273,7 @@ float funcgen::random_DC()
 
 float funcgen::trapezium1(float t)
 {
-  t += _phase + _period / 8;  //  zero point for t = 0
+  t += _phase + _period * _dutyCycle / 4;  //  zero point for t = 0
   if (t < 0)
   {
     t = -t;
@@ -282,26 +282,26 @@ float funcgen::trapezium1(float t)
 
   if (t < _period * 0.5 * _dutyCycle)  //  rising part
   {
-    return -_amplitude + 2 * _amplitude * (t * 2  / (_period * _dutyCycle));
+    return _yShift + -_amplitude + 2 * _amplitude * (t * 2  / (_period * _dutyCycle));
   }
   else if (t < _period * 0.5)  //  high part
   {
-    return _amplitude;
+    return _yShift + _amplitude;
   }
   else if (t < _period * (0.5 + 0.5 * _dutyCycle))  //  falling part
   {
-    return _amplitude - 2 * _amplitude * ( (t * 2 - _period) / (_period * _dutyCycle));
+    return _yShift + _amplitude - 2 * _amplitude * ( (t * 2 - _period) / (_period * _dutyCycle));
   }
   else   //  low part
   {
-    return -_amplitude;
+    return _yShift + -_amplitude;
   }
 }
 
 
 float funcgen::trapezium2(float t)
 {
-  t += _phase + _period / 8;  //  zero point for t = 0
+  t += _phase + _period * _dutyCycle / 4;  //  zero point for t = 0
   if (t < 0)
   {
     t = -t;
@@ -310,19 +310,19 @@ float funcgen::trapezium2(float t)
 
   if (t < _period * 0.25)  //  rising part
   {
-    return -_amplitude + 2 * _amplitude * (t * 4 / _period);
+    return _yShift + -_amplitude + 2 * _amplitude * (t * 4 / _period);
   }
   else if (t < _period * (0.25 + 0.5 * _dutyCycle))  //  high part
   {
-    return _amplitude;
+    return _yShift + _amplitude;
   }
   else if (t < _period * (0.5 + 0.5 * _dutyCycle))  //  falling part
   {
-    return _amplitude - 2 * _amplitude * ((t - _period * (0.25 + 0.5 * _dutyCycle)) * 4 / _period);
+    return _yShift + _amplitude - 2 * _amplitude * ((t - _period * (0.25 + 0.5 * _dutyCycle)) * 4 / _period);
   }
   else   //  low part
   {
-    return -_amplitude;
+    return _yShift + -_amplitude;
   }
 }
 
@@ -331,6 +331,7 @@ float funcgen::trapezium2(float t)
 // no DC version (50%
 float funcgen::trapezium(float t)
 {
+  t += _phase;
   if (t < 0)
   {
     t = -t;
@@ -355,6 +356,35 @@ float funcgen::trapezium(float t)
   }
 }
 */
+
+
+//
+//  EXPERIMENTAL HEARTBEAT  (FREQ = 72.0 / 60.0 ~ 1.2
+//  based upon MultiMap
+//  in array is normalized to 0.0 - 1.0
+//
+//  Heart beat phase                 P                 Q     R     S                     T         U          
+float in[21]  = { 0.0, 0.07, 0.13, 0.20, 0.27, 0.33,  0.40, 0.46,  0.53, 0.60, 0.66, 0.73, 0.80, 0.86, 0.93, 1.00 };
+float out[21] = { 0.0, 0.00, 0.10, 0.25, 0.10, 0.10, -0.05, 1.00, -0.25, 0.20, 0.25, 0.30, 0.30, 0.20, 0.00, 0.00 };
+
+
+float funcgen::mm(float t)
+{
+  t += _phase;
+  t = fmod(t, _period);
+
+  //  normalize t to 0.0 - 1.0
+  t *= _freq1;
+  //  search interval
+  int idx = 0; 
+  while (t > in[idx]) idx++;
+  if (t == in[idx]) return _yShift + _amplitude * out[idx];
+  idx--;
+  //  interpolate.
+  float factor = (t - in[idx]) / (in[idx+1] - in[idx]);
+  return _yShift + _amplitude * (out[idx] + factor * (out[idx+1] - out[idx]));
+}
+
 
 
 /////////////////////////////////////////////////////////////
