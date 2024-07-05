@@ -2,14 +2,14 @@
 //
 //    FILE: functionGenerator.h
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.2.6
+// VERSION: 0.2.7
 // PURPOSE: wave form generating functions (use with care)
 //     URL: https://github.com/RobTillaart/FunctionGenerator
 
 
 #include "Arduino.h"
 
-#define FUNCTIONGENERATOR_LIB_VERSION           (F("0.2.6"))
+#define FUNCTIONGENERATOR_LIB_VERSION           (F("0.2.7"))
 
 
 class funcgen
@@ -57,6 +57,8 @@ public:
   float triangle(float t);
   float square(float t);
   float sinus(float t);
+  float sinusDiode(float t);
+  float sinusRectified(float t);
   float stair(float t, uint16_t steps = 8, uint8_t mode = 0);
 
   float random();

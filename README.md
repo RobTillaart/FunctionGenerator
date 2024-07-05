@@ -129,7 +129,11 @@ The variable t == time in seconds.
   - mode == 1 ==> sawtooth |\\. Effectively equals inverting the amplitude.
 - **float triangle(float t)** triangle form, duty cycle default 50%. 
 - **float square(float t)** square wave with duty cycle default 50%.
-- **float sinus(float t)** sinus wave, has no duty cycle. 
+- **float sinus(float t)** sinus wave, has no duty cycle.
+- **float sinusDiode(float t)** sinus wave, only positive pulses.
+(Better name welcome).
+- **float sinusRectified(float t)** sinus wave, with "abs(negative pulses)".
+(Better name welcome).
 - **float stair(float t, uint16_t steps = 8, uint8_t mode = 0)** defaults to 8 steps up.
   - mode = 0 ==> steps up
   - mode = 1 ==> steps down. Effectively equals inverting the amplitude.

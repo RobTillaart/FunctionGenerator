@@ -1,7 +1,7 @@
 //
 //    FILE: functionGenerator.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.2.6
+// VERSION: 0.2.7
 // PURPOSE: wave form generating functions (use with care)
 //     URL: https://github.com/RobTillaart/FunctionGenerator
 
@@ -200,6 +200,37 @@ float funcgen::sinus(float t)
   float rv;
   t += _phase;
   rv = _amplitude * sin(t * _freq0);
+  rv += _yShift;
+  return rv;
+}
+
+
+float funcgen::sinusDiode(float t)
+{
+  float rv = sinus(t);
+  if (rv < _yShift) return _yShift;
+  return rv;
+
+  // float rv;
+  // t += _phase;
+  // rv = sin(t * _freq0);
+  // if (rv < 0) return _yShift;
+  // rv *= amplitude;
+  // rv += _yShift;
+  // return rv;
+}
+
+
+float funcgen::sinusRectified(float t)
+{
+  // float rv = sinus(t);
+  // if (rv < _yShift) return _yShift - rv;
+  // return rv;
+
+  float rv;
+  t += _phase;
+  rv = _amplitude * sin(t * _freq0);
+  if (rv < 0) rv = -rv;
   rv += _yShift;
   return rv;
 }

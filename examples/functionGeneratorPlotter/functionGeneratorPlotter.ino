@@ -38,15 +38,19 @@ void loop()
   Serial.print("\t");
   Serial.print(-80);
   Serial.print("\t");
-  Serial.print(gen.square(t));
-  Serial.print("\t");
+  //  Serial.print(gen.square(t));
+  //  Serial.print("\t");
   //  Serial.print(gen.sawtooth(t, 0));  //  up    /|   signal
   //  Serial.print("\t");
   //  Serial.print(gen.sawtooth(t, 1));  //  down  |\   signal
   //  Serial.print("\t");
-  Serial.print(gen.triangle(t));
+  //  Serial.print(gen.triangle(t));
   //  Serial.print("\t");
   //  Serial.print(gen.sinus(t));
+  //  Serial.print("\t");
+  //  Serial.print(gen.sinusDiode(t));
+  //  Serial.print("\t");
+  Serial.print(gen.sinusRectified(t));
   //  Serial.print("\t");
   //    Serial.print(gen.stair(t, 16, 0));  //  step up
   //    Serial.print("\t");
