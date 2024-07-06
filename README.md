@@ -255,6 +255,7 @@ Think of it as the halve of the triangle wave.
 - heartBeat
   - small noise/variation parameter on amplitude and frequency.
   - reduce footprint ==> wrapper around freeWave()
+- add **freeWaveN(t, arr, N)** ==> arbitrary array size
 - waves
   - white noise, pink noise (better done with hardware)
   - min() + max() => return +-amplitude + yshift?
