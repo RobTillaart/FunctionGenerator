@@ -1,7 +1,7 @@
 //
 //    FILE: functionGenerator.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.2.7
+// VERSION: 0.3.0
 // PURPOSE: wave form generating functions (use with care)
 //     URL: https://github.com/RobTillaart/FunctionGenerator
 
@@ -365,9 +365,28 @@ float funcgen::trapezium(float t)
 //
 //  EXPERIMENTAL HEARTBEAT  
 //  => setFrequency(72.0 / 60.0);  //  BPM/60 = BPS.
+float funcgen::heartBeat(float t)
+{
+  int16_t out[32] = {
+       0,    0, 1000, 2500,
+    1000, 1000,  -50, 10000,
+    -2500, 2000, 2500, 3000,
+    3000, 2000,    0,    0,
+    0,0,0,0,
+    0,0,0,0,
+    0,0,0,0,
+    0,0,0,0,
+  };
+  int pts = map(_dutyCycle * 100, 0, 100, 31, 15);
+  
+  return freeWaveN(t, out, pts);
+}
+
+
+/*
 //  points need to  be optimized, 
 //  0.2.7 uses 160 bytes for the two arrays.
-//  wrapper arounf freeWave?
+//  wrapper around freeWave?
 float funcgen::heartBeat(float t)
 {
   //  based upon MultiMap in[] array is normalized to 0.0 - 1.0
@@ -389,19 +408,19 @@ float funcgen::heartBeat(float t)
   float factor = (t - in[idx]) / (in[idx+1] - in[idx]);
   return _yShift + _amplitude * (out[idx] + factor * (out[idx+1] - out[idx]));
 }
+*/
 
 
-float funcgen::freeWave(float t, int16_t * arr)
+float funcgen::freeWave(float t, int16_t * arr, int16_t N)
 {
   t += _phase;
-  t = fmod(t, _period);
-
   //  normalize t to 0.0 - 1.0
+  t = fmod(t, _period);
   t *= _freq1;
 
-  //  search interval, as arr is based upon 100 equidistant points,
+  //  search interval, as arr is based upon N equidistant points,
   //  we can easily calculate the points for direct access
-  float factor = t * 100;
+  float factor = t * N;
   int idx = factor;        //  truncate to get index of output array.
   factor = factor - idx;   //  remainder is interpolate factor.
   //  interpolate.

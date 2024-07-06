@@ -35,7 +35,7 @@ As always, feedback and ideas are welcome.
 You always have to verify your own performance measurements to see if 
 your requirements are met by this library.
 
-Indication of what performance can be expected (based upon 0.2.1 version).  
+**Indication** of what performance can be expected (based upon 0.2.1 version).  
 Note that the values need to be transported to a DAC or serial port too.  
 Numbers based on performance example, for one single signal.
 
@@ -174,8 +174,8 @@ DutyCycle changes duration HIGH vs LOW, wave stays trapezium like.
 Note at 50% DC the two trapezium functions are identical.
 - **float heartBeat(float t)** simplified heartbeat wave.
 To get a regular BPM heartbeat one should **setFrequency(BPM/60.0)** e.g 72/60 = 1.2.
-- **float freeWave(float t, int16_t arr)** define a free wave form.
-It uses an array of **101** values, dividing a full period in **100** equidistant steps.
+- **float freeWave(float t, int16_t arr, int16_t N)** define a free wave form.
+It uses an array of **N+1** values, dividing a full period in **N** equidistant steps.
 The last value should equal the first value to have a smooth transition.
 The values of the array normally vary between -10000 and +10000 to manage
 the set the relative amplitude in small steps. 
@@ -206,6 +206,8 @@ The length of the HIGH LOW level go from 0 to half a period.
 - **float trapezium2(float t)** The duty cycle determines the length of the HIGH level,
 which is 0 for 0% DC and half a period for 100% DC. 
 The rising and falling edges stay same.
+- **float heartBeat(float t)** The duty cycle determines the part of the period
+that the signal ~zero.
 
 ### No duty cycle
 
@@ -220,9 +222,7 @@ Think of it as the halve of the triangle wave.
 - **zero()** has no period so does not make sense (yet).
 - **float sinusDiode(float t)**
 - **float sinusRectified(float t)**
-- **float heartBeat(float t)** 
-- **float freeWave(float t, int16_t arr)**
-
+- **float freeWave(float t, int16_t arr, int16_t N)**
 
 ## Future
 
@@ -230,6 +230,7 @@ Think of it as the halve of the triangle wave.
 
 - improve documentation
   - reorganize
+  - section per function might be better.
 
 #### Should
 
@@ -237,6 +238,7 @@ Think of it as the halve of the triangle wave.
   - initialize random generator with compile file + date + time.
   - use function values for seed bits.
 - stand-alone functions in separate .h
+- clean up code
 
 #### Could
 
@@ -255,14 +257,16 @@ Think of it as the halve of the triangle wave.
 - heartBeat
   - small noise/variation parameter on amplitude and frequency.
   - reduce footprint ==> wrapper around freeWave()
-- add **freeWaveN(t, arr, N)** ==> arbitrary array size
 - waves
   - white noise, pink noise (better done with hardware)
   - min() + max() => return +-amplitude + yshift?
   - RC function curve.
   - Gamma curve.
-  - freeWave allows a lot.
-- create a function table
+- create a function table? with what?
+- create an example program to sample an arbitrary wave form
+  - output in the right format.
+  - slow sampling vs real time.
+
 
 #### Examples
 

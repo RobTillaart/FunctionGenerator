@@ -86,7 +86,7 @@ void loop()
   Serial.print("\t");
   Serial.print(-80);
   Serial.print("\t");
-  Serial.print(gen.freeWave(t, arr_two_sin));
+  Serial.print(gen.freeWave(t, arr_two_sin, 100));
   Serial.println();
   delay(10);
 }

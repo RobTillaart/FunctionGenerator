@@ -11,6 +11,7 @@
 #include "functionGenerator.h"
 
 funcgen gen;
+funcgen gen2;
 
 
 void setup()
@@ -22,8 +23,14 @@ void setup()
   //  Serial.println();
 
   gen.setAmplitude(80);
-  gen.setFrequency(65.0/60.0);  //  HB = BPM/60.0
-  gen.setDutyCycle(50);
+  gen.setFrequency(65.0 / 60.0); //  HB = BPM/60.0
+  gen.setDutyCycle(40);
+  gen2.setYShift(+20);
+
+  gen2.setAmplitude(80);
+  gen2.setFrequency(120.0 / 60.0); //  HB = BPM/60.0
+  gen2.setDutyCycle(80);
+  gen2.setYShift(-80);
 }
 
 
@@ -36,9 +43,9 @@ void loop()
 
   //  Serial.print(t, 3);
   //  Serial.print("\t");
-  Serial.print(80);
+  Serial.print(100);
   Serial.print("\t");
-  Serial.print(-80);
+  Serial.print(-100);
   Serial.print("\t");
   //  Serial.print(gen.square(t));
   //  Serial.print("\t");
@@ -58,7 +65,9 @@ void loop()
   //  Serial.print("\t");
   //  Serial.print(gen.trapezium2(t));
   //  Serial.print("\t");
-  //  Serial.print(gen.heartBeat(t));
+  Serial.print(gen.heartBeat(t));
+  Serial.print("\t");
+  Serial.print(gen2.heartBeat(t));
   //  Serial.print("\t");
   //  Serial.print(gen.freeWave(t, array));
   //  Serial.print("\t");
@@ -66,7 +75,7 @@ void loop()
   //    Serial.print("\t");
   //    Serial.print(gen.stair(t, 16, 1));  //  step down
   //    Serial.print("\t");
-  Serial.print(gen.random());
+  //  Serial.print(gen.random());
   //  Serial.print("\t");
   //  Serial.print(gen.random_DC());
   //  Serial.print("\t");

@@ -1,6 +1,6 @@
 
 functionGeneratorPerformance.ino
-FUNCTIONGENERATOR_LIB_VERSION: 0.2.7
+FUNCTIONGENERATOR_LIB_VERSION: 0.3.0
 
 indicative output Arduino UNO 1.8.19, 16 MHz.
 
