@@ -71,7 +71,7 @@ public:
   float trapezium1(float t);
   float trapezium2(float t);
   float heartBeat(float t);  //  72 BPM = 72/60 = 1 setFrequency(1.2)
-  float freeWave(float t, int16_t * arr, int16_t N);  //  arr must be N+1 long
+  float freeWave(float t, int16_t * arr, int16_t size);  //  arr must be size+1 long
 
 
 private:

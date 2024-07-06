@@ -349,7 +349,7 @@ void test_freeWave()
   start = micros();
   for (int i = 0; i < 10000; i++)
   {
-    t = gen.freeWave(i, arr_two_sin);
+    t = gen.freeWave(i, arr_two_sin, 100);
   }
   stop = micros();
   Serial.print(__FUNCTION__);

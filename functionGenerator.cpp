@@ -412,7 +412,7 @@ float funcgen::heartBeat(float t)
 */
 
 
-float funcgen::freeWave(float t, int16_t * arr, int16_t N)
+float funcgen::freeWave(float t, int16_t * arr, int16_t size)
 {
   t += _phase;
   //  normalize t to 0.0 - 1.0
@@ -421,7 +421,7 @@ float funcgen::freeWave(float t, int16_t * arr, int16_t N)
 
   //  search interval, as arr is based upon N equidistant points,
   //  we can easily calculate the points for direct access
-  float factor = t * N;
+  float factor = t * size;
   int idx = factor;        //  truncate to get index of output array.
   factor = factor - idx;   //  remainder is interpolate factor.
   //  interpolate.
