@@ -377,9 +377,10 @@ float funcgen::heartBeat(float t)
     0,0,0,0,
     0,0,0,0,
   };
+  //  use duty cycle to determine zero level duration.
   int pts = map(_dutyCycle * 100, 0, 100, 31, 15);
   
-  return freeWaveN(t, out, pts);
+  return freeWave(t, out, pts);
 }
 
 
