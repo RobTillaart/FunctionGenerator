@@ -27,8 +27,13 @@ In practice the generator is useful for low frequencies,
 Note: this class generates float values, performance wise this can be optimized,
 to achieve higher speeds at cost of accuracy / precision.
 
+As always, feedback and ideas are welcome.
 
-#### Performance
+
+### Performance
+
+You always have to verify your own performance measurements to see if 
+your requirements are met by this library.
 
 Indication of what performance can be expected (based upon 0.2.1 version).  
 Note that the values need to be transported to a DAC or serial port too.  
@@ -75,12 +80,20 @@ have become slightly slower.
 See **functionGeneratorPerformance.ino**
 
 
-#### Accuracy
+### Accuracy
 
 If the time parameter **t** grows large, the internal math may have rounding 
 problems after some time. This can and will affect the quality of the output.
+It is advised to reset **t** after a number (e.g. 100) full periods
 
 Needs further investigations.
+
+### Related
+
+- https://github.com/RobTillaart/AD9833 hardware waveform generator.
+- https://github.com/RobTillaart/AD985X hardware waveform generator.
+- https://github.com/RobTillaart/functionGenerator software waveform generator.
+- https://pages.mtu.edu/~suits/notefreqs.html frequency table for notes.
 
 
 ## Interface
@@ -89,40 +102,42 @@ Needs further investigations.
 #include "functionGenerator.h"
 ```
 
-#### Constructor
+### Constructor
 
 - **funcgen(float period = 1.0, float amplitude = 1.0, float phase = 0.0, float yShift = 0.0)**
 All parameters (except duty cycle) can be set in the constructor but also later in configuration.
 Default dutyCycle is 50%.
 
 
-#### Configuration
+### Configuration
 
-- **void  setPeriod(float period = 1.0)** set the period of the wave in seconds. 
+- **void setPeriod(float period = 1.0)** set the period of the wave in seconds.
+This is the inverse of the frequency.
 - **float getPeriod()** returns the set period.
-- **void  setFrequency(float frequency = 1.0)** set the frequency of the wave in Hertz (1/s).
+- **void setFrequency(float frequency = 1.0)** set the frequency of the wave in Hertz (1/s).
+This is the inverse of the period.
 - **float getFrequency()** returns the set frequency in Hertz.
-- **void  setAmplitude(float amplitude = 1.0)** sets the amplitude of the wave.
+- **void setAmplitude(float amplitude = 1.0)** sets the amplitude of the wave.
 The range is from **-amplitude** to **+amplitude**.
 Setting the amplitude to 0 gives effectively a zero signal.
 Setting the amplitude to a negative value effectively inverts the signal.
 - **float getAmplitude()** returns the set amplitude.
-- **void  setPhase(float phase = 0.0)** shifts the phase of the wave. 
+- **void setPhase(float phase = 0.0)** shifts the phase of the wave. 
 Will only be noticeable when compared with other waves.
 Phase is also known as the X- or horizontal shift.
 - **float getPhase()** returns the set phase.
-- **void  setYShift(float yShift = 0.0)** sets an Y-shift or vertical offset in amplitude.
+- **void setYShift(float yShift = 0.0)** sets an Y-shift or vertical offset in amplitude.
 This allows to set e.g. the zero level.
 - **float getYShift()** returns the set Y-shift.
-- **void  setDutyCycle(float percentage = 100)** sets the duty cycle of the signal.
+- **void setDutyCycle(float percentage = 100)** sets the duty cycle of the signal.
 Experimental, not all waveforms have a duty cycle or interpret it differently, see below.
 Duty cycle must be between 0 and 100% and will be clipped otherwise.
-- **float getDutyCycle()** returns the set duty cycle.
-- **void  setRandomSeed(uint32_t a, uint32_t b = 314159265)** sets the initial seeds for the
+- **float getDutyCycle()** returns the set (clipped) duty cycle.
+- **void setRandomSeed(uint32_t a, uint32_t b = 314159265)** sets the initial seeds for the
 (Marsaglia) random number generator. The first is mandatory, the second is optional.
 
 
-#### Wave forms
+### Wave forms
 
 The variable t == time in seconds.
 
@@ -135,7 +150,8 @@ The variable t == time in seconds.
 - **float stair(float t, uint16_t steps = 8, uint8_t mode = 0)** defaults to 8 steps up.
   - mode = 0 ==> steps up
   - mode = 1 ==> steps down. Effectively equals inverting the amplitude.
-- **float random()** random noise generation.
+- **float random()** random noise generation between 0 and amplitude.
+Uses Marsaglia random generator.
 - **float line()** constant voltage line. 
 Height depends on the YShift and amplitude.
 - **float zero()** constant zero.
@@ -150,12 +166,23 @@ Experimental 0.2.7
 (better name welcome).
 - **float sinusRectified(float t)** sinus wave, with "abs(negative pulses)".  
 (better name welcome).
-- **float trapezium1(float t)** trapezium wave, DutyCycle changes steepness falling rising.
-- **float trapezium2(float t)** trapezium wave, DutyCycle changes period HIGH vs LOW
-
+- **float trapezium1(float t)** trapezium wave.
+DutyCycle changes steepness of the falling and rising edge.
+The wave changes from a square wave, via trapezium to a triangle wave.
+- **float trapezium2(float t)** trapezium wave.
+DutyCycle changes duration HIGH vs LOW, wave stays trapezium like.
 Note at 50% DC the two trapezium functions are identical.
+- **float heartBeat(float t)** simplified heartbeat wave.
+To get a regular BPM heartbeat one should **setFrequency(BPM/60.0)** e.g 72/60 = 1.2.
+- **float freeWave(float t, int16_t arr)** define a free wave form.
+It uses an array of **101** values, dividing a full period in **100** equidistant steps.
+The last value should equal the first value to have a smooth transition.
+The values of the array normally vary between -10000 and +10000 to manage
+the set the relative amplitude in small steps. 
+These are scaled back to -1.0 to +1.0 times the amplitude.
 
-#### Duty Cycle 
+
+### Duty Cycle 
 
 Since 0.2.5 the library has **experimental** support for duty cycle.
 The meaning of duty cycle differs per wave form.
@@ -173,14 +200,14 @@ with respect to previous value.
 Implemented as a weighed average between new and previous value.
 Made a separate function as handling the duty cycle slows performance substantial.
 Initial starts at zero and can be adjusted with **YShift()**.
-- **float trapezium1(float t)** The duty cycle determines the steepness of the rising
+- **float trapezium1(float t)** The duty cycle changes the steepness of the rising
 and falling edges. This changes the form from square wave to trapezium to triangle.
 The length of the HIGH LOW level go from 0 to half a period.
 - **float trapezium2(float t)** The duty cycle determines the length of the HIGH level,
 which is 0 for 0% DC and half a period for 100% DC. 
 The rising and falling edges stay same.
 
-#### No duty cycle
+### No duty cycle
 
 The other functions need to be investigated what duty cycle means.
 Current ideas that are **NOT** implemented:
@@ -193,40 +220,48 @@ Think of it as the halve of the triangle wave.
 - **zero()** has no period so does not make sense (yet).
 - **float sinusDiode(float t)**
 - **float sinusRectified(float t)**
-
-
-Feedback and ideas are welcome.
+- **float heartBeat(float t)** 
+- **float freeWave(float t, int16_t arr)**
 
 
 ## Future
 
 #### Must
 
-- documentation
-  - quality of signals - after substantial time t
-  - max freq per wave form etc.
-    Should this be in the library?
+- improve documentation
+  - reorganize
 
 #### Should
 
 - smart reseed needed for random().
-- initialize random generator with compile time.
+  - initialize random generator with compile file + date + time.
+  - use function values for seed bits.
+- stand-alone functions in separate .h
 
 #### Could
 
-- waves
-  - white noise, pink noise etc.
-  - heart beat (quite complex but fun)
-  - multiMap interpolation point curves.
-- RC function curve.
+- ASDR wave 
+  - https://en.wikipedia.org/wiki/Envelope_(music)
+  - **float ADSR(float t, float A, float D, float S, float R)** 
+  - ADSR are percentages, A + D + R < 1.0
+  - S = % of amplitude.
 - external clock to synchronize two or more software function generators.
-- stand-alone functions in separate .h
 - check for synergy with https://github.com/RobTillaart/AD985X
 - investigate performance.
   - algorithms for DAC specific gains e.g. 10-12-16 bit.
   - improve performance sin() lookup table.
   - add float variable for ```_perDC = _period * _dutyCycle```
   - do we need **freq4** ? not since DC.
+- heartBeat
+  - small noise/variation parameter on amplitude and frequency.
+  - reduce footprint ==> wrapper around freeWave()
+- waves
+  - white noise, pink noise (better done with hardware)
+  - min() + max() => return +-amplitude + yshift?
+  - RC function curve.
+  - Gamma curve.
+  - freeWave allows a lot.
+- create a function table
 
 #### Examples
 
@@ -248,6 +283,8 @@ Feedback and ideas are welcome.
   - **float stairDC()**
 - Bezier curve? (too complex)
 - record a signal and play back  ==> separate class
+- document max frequency per wave form etc.
+  Should this be in the library? differs per board.
 
 
 ## Support

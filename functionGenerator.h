@@ -53,19 +53,25 @@ public:
   float zero();
 
   //  standard wave forms
-  float sawtooth(float t, uint8_t mode = 0);   //  0 ==>  /|.   1 ==> sawtooth |\.
+  float sawtooth(float t, uint8_t mode = 0);  //  0 ==>  /|.   1 ==> sawtooth |\.
   float triangle(float t);
   float square(float t);
   float sinus(float t);
-  float sinusDiode(float t);      //  Experimental.
-  float sinusRectified(float t);  //  Experimental.
   float stair(float t, uint16_t steps = 8, uint8_t mode = 0);
-  float trapezium1(float t);      //  Experimental.
-  float trapezium2(float t);      //  Experimental.
-  float mm(float t);              //  Experimental.
 
   float random();
   float random_DC();  //  duty cycle variant. Experimental.
+
+  /////////////////////////////////////////////////////////////
+  //
+  //  EXPERIMENTAL 0.2.7
+  //
+  float sinusDiode(float t);
+  float sinusRectified(float t);
+  float trapezium1(float t);
+  float trapezium2(float t);
+  float heartBeat(float t);  //  72 BPM = 72/60 = 1 setFrequency(1.2)
+  float freeWave(float t, int16_t * arr);
 
 
 private:

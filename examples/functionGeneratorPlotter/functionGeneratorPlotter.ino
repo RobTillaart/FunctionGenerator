@@ -58,13 +58,15 @@ void loop()
   //  Serial.print("\t");
   //  Serial.print(gen.trapezium2(t));
   //  Serial.print("\t");
-  Serial.print(gen.mm(t));
+  //  Serial.print(gen.heartBeat(t));
+  //  Serial.print("\t");
+  //  Serial.print(gen.freeWave(t, array));
   //  Serial.print("\t");
   //    Serial.print(gen.stair(t, 16, 0));  //  step up
   //    Serial.print("\t");
   //    Serial.print(gen.stair(t, 16, 1));  //  step down
   //    Serial.print("\t");
-  //  Serial.print(gen.random());
+  Serial.print(gen.random());
   //  Serial.print("\t");
   //  Serial.print(gen.random_DC());
   //  Serial.print("\t");

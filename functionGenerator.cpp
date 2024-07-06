@@ -205,37 +205,6 @@ float funcgen::sinus(float t)
 }
 
 
-float funcgen::sinusDiode(float t)
-{
-  float rv = sinus(t);
-  if (rv < _yShift) return _yShift;
-  return rv;
-
-  // float rv;
-  // t += _phase;
-  // rv = sin(t * _freq0);
-  // if (rv < 0) return _yShift;
-  // rv *= amplitude;
-  // rv += _yShift;
-  // return rv;
-}
-
-
-float funcgen::sinusRectified(float t)
-{
-  // float rv = sinus(t);
-  // if (rv < _yShift) return _yShift - rv;
-  // return rv;
-
-  float rv;
-  t += _phase;
-  rv = _amplitude * sin(t * _freq0);
-  if (rv < 0) rv = -rv;
-  rv += _yShift;
-  return rv;
-}
-
-
 float funcgen::stair(float t, uint16_t steps, uint8_t mode)
 {
   t += _phase;
@@ -267,6 +236,41 @@ float funcgen::random_DC()
   static float rv = 0;
   float next = _yShift + _amplitude * _random() * 0.2328306436E-9;  //  div 0xFFFFFFFF
   rv += (next - rv) * _dutyCycle;
+  return rv;
+}
+
+
+/////////////////////////////////////////////////////////////
+//
+//  EXPERIMENTAL 0.2.7
+//
+float funcgen::sinusDiode(float t)
+{
+  float rv = sinus(t);
+  if (rv < _yShift) return _yShift;
+  return rv;
+
+  // float rv;
+  // t += _phase;
+  // rv = sin(t * _freq0);
+  // if (rv < 0) return _yShift;
+  // rv *= amplitude;
+  // rv += _yShift;
+  // return rv;
+}
+
+
+float funcgen::sinusRectified(float t)
+{
+  // float rv = sinus(t);
+  // if (rv < _yShift) return _yShift - rv;
+  // return rv;
+
+  float rv;
+  t += _phase;
+  rv = _amplitude * sin(t * _freq0);
+  if (rv < 0) rv = -rv;
+  rv += _yShift;
   return rv;
 }
 
@@ -359,17 +363,18 @@ float funcgen::trapezium(float t)
 
 
 //
-//  EXPERIMENTAL HEARTBEAT  (FREQ = 72.0 / 60.0 ~ 1.2
-//  based upon MultiMap
-//  in array is normalized to 0.0 - 1.0
-//
-//  Heart beat phase                 P                 Q     R     S                     T         U          
-float in[21]  = { 0.0, 0.07, 0.13, 0.20, 0.27, 0.33,  0.40, 0.46,  0.53, 0.60, 0.66, 0.73, 0.80, 0.86, 0.93, 1.00 };
-float out[21] = { 0.0, 0.00, 0.10, 0.25, 0.10, 0.10, -0.05, 1.00, -0.25, 0.20, 0.25, 0.30, 0.30, 0.20, 0.00, 0.00 };
-
-
-float funcgen::mm(float t)
+//  EXPERIMENTAL HEARTBEAT  
+//  => setFrequency(72.0 / 60.0);  //  BPM/60 = BPS.
+//  points need to  be optimized, 
+//  0.2.7 uses 160 bytes for the two arrays.
+//  wrapper arounf freeWave?
+float funcgen::heartBeat(float t)
 {
+  //  based upon MultiMap in[] array is normalized to 0.0 - 1.0
+  //  Heart beat phase                 P                 Q     R     S                     T         U          
+  float in[21]  = { 0.0, 0.07, 0.13, 0.20, 0.27, 0.33,  0.40, 0.46,  0.53, 0.60, 0.66, 0.73, 0.80, 0.86, 0.93, 1.00 };
+  float out[21] = { 0.0, 0.00, 0.10, 0.25, 0.10, 0.10, -0.05, 1.00, -0.25, 0.20, 0.25, 0.30, 0.30, 0.20, 0.00, 0.00 };
+
   t += _phase;
   t = fmod(t, _period);
 
@@ -385,6 +390,23 @@ float funcgen::mm(float t)
   return _yShift + _amplitude * (out[idx] + factor * (out[idx+1] - out[idx]));
 }
 
+
+float funcgen::freeWave(float t, int16_t * arr)
+{
+  t += _phase;
+  t = fmod(t, _period);
+
+  //  normalize t to 0.0 - 1.0
+  t *= _freq1;
+
+  //  search interval, as arr is based upon 100 equidistant points,
+  //  we can easily calculate the points for direct access
+  float factor = t * 100;
+  int idx = factor;        //  truncate to get index of output array.
+  factor = factor - idx;   //  remainder is interpolate factor.
+  //  interpolate.
+  return _yShift + _amplitude * 1e-4 * (arr[idx] + factor * (arr[idx+1] - arr[idx]));
+}
 
 
 /////////////////////////////////////////////////////////////

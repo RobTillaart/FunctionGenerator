@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add **float sinusRectified(float t)**
 - add **float trapezium1(float t)** with duty cycle.
 - add **float trapezium2(float t)** with duty cycle.
+- add **float heartBeat(float t)**
+- add **float freeWave(float t, int16_t arr)** arbitrary wave generator.
 - update **functionGeneratorPerformance.ino**
+- add examples for **freeWave()**
 - fix Arduino-lint.yml (long library name error)
 - minor edits
 
