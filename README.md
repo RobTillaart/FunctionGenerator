@@ -94,7 +94,7 @@ Needs further investigations.
 - https://github.com/RobTillaart/AD9833 hardware waveform generator.
 - https://github.com/RobTillaart/AD985X hardware waveform generator.
 - https://github.com/RobTillaart/functionGenerator software waveform generator.
-- https://pages.mtu.edu/~suits/notefreqs.html frequency table for notes.
+- https://plastic.audio/note-frequencies/ frequency table for notes.
 
 
 ## Interface
